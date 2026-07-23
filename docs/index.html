@@ -283,7 +283,7 @@ footer a{color:var(--green-2);text-decoration:none;font-weight:600}
     <svg class="si" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
     <input id="q" type="search" autocomplete="off" autocorrect="off" autocapitalize="off"
            spellcheck="false" enterkeyhint="search"
-           placeholder="Search a name, title, agency or phone number">
+           placeholder="Search a name, title or agency">
     <button id="clear" aria-label="Clear search">&times;</button>
   </div></div>
 </header>
@@ -464,9 +464,9 @@ function renderIntro(){
   <div class="intro">
     <p class="lede">The city's own directory, rebuilt. Every official the City of New York
     publishes, searchable in one box, with every phone number one tap from a call.</p>
-    <p>Start typing a name, a job title, an agency, or a phone number you want
-    identified. Nothing here is guessed at &mdash; it is the city's published
-    record, reorganized.</p>
+    <p>Start typing a name, a job title or an agency. Nothing here is guessed at
+    &mdash; it is the city's published record, reorganized. If a city number
+    called you and you want to know who it was, paste that in too.</p>
     <div class="stats">
       <div class="stat"><div class="v">${s.people.toLocaleString()}</div><div class="l">Listings</div></div>
       <div class="stat"><div class="v">${s.phones.toLocaleString()}</div><div class="l">Direct lines</div></div>

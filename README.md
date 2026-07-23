@@ -20,8 +20,8 @@ to a listing, and no way to search across everything at once.
 This is the same public data, reorganized:
 
 - **One box searches everything** — people, titles, agencies, divisions,
-  addresses, press offices, and phone numbers. Type `212 639` to find out whose
-  extension that is.
+  addresses and press offices. Paste in a number a city line called you from
+  and it works in reverse too.
 - **Every number dials.** Including vanity numbers — `(212) NEW-YORK` and
   `1-800-CUNY-YES` are translated to keypad digits.
 - **Every press office emails.** The city publishes these; neither open dataset
