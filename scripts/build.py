@@ -728,6 +728,47 @@ def main():
                     "url": o["officer_url"] if o else ""} if gov else None,
             "status": status,
         })
+    # ---- resolve the disagreements ----------------------------------------
+    # The governance inventory is maintained continuously and is the better
+    # source on who currently holds a post; the Green Book lags on political
+    # appointees. But it is not uniformly fresher, and there is one signal that
+    # reliably says so: when the Green Book calls someone Acting or Interim, it
+    # is reporting a vacancy the governance file has not caught up with, and
+    # its name is the newer one. Governance wins by default, the Green Book
+    # wins on that signal, and both names are always kept.
+    ACTING = re.compile(r"\b(acting|interim)\b", re.I)
+    applied = 0
+    for h in heads:
+        if h["status"] != "differs":
+            continue
+        gb_acting = bool(ACTING.search(h["gb"]["t"]))
+        h["use"] = "greenbook" if gb_acting else "governance"
+        h["why"] = ("The Green Book names an acting officeholder, which the "
+                    "governance dataset has not registered."
+                    if gb_acting else
+                    "The governance dataset is maintained continuously; the "
+                    "Green Book lags on political appointees.")
+        if h["use"] == "governance":
+            # Rewrite the person record, keeping the superseded name attached.
+            for p in people:
+                if p["a"] == h["agency"] and p["n"] == h["gb"]["n"] \
+                        and p["t"] == h["gb"]["t"]:
+                    p["alt"] = {"n": p["n"], "src": "Green Book"}
+                    p["n"] = h["gov"]["n"]
+                    p["src"] = "governance"
+                    applied += 1
+                    break
+        else:
+            for p in people:
+                if p["a"] == h["agency"] and p["n"] == h["gb"]["n"] \
+                        and p["t"] == h["gb"]["t"]:
+                    p["alt"] = {"n": h["gov"]["n"], "src": "governance dataset"}
+                    break
+
+    log(f"  applied {applied} governance names over the Green Book; "
+        f"kept {sum(1 for h in heads if h.get('use') == 'greenbook')} "
+        f"Green Book acting officeholders")
+
     heads.sort(key=lambda h: (h["status"] != "differs", -h["n"]))
     conflicts = [h for h in heads if h["status"] == "differs"]
 
@@ -771,7 +812,8 @@ def main():
         w = csv.writer(fh)
         w.writerow(["name", "title", "agency", "acronym", "division_path",
                     "phone", "phone_2", "division_phone", "fax", "address",
-                    "city", "state", "zip", "section", "vacant"])
+                    "city", "state", "zip", "section", "vacant",
+                    "name_source", "other_source_name"])
         abyk = {b["k"]: b for b in buildings}
         for p in people:
             b = abyk.get(p["ak"], {})
@@ -781,6 +823,8 @@ def main():
                 " > ".join(p["d"]), p["p"], p["p2"], p["dp"], p["fx"],
                 b.get("addr", ""), b.get("city", ""), b.get("state", ""),
                 b.get("zip", ""), p["s"], "yes" if p["v"] else "",
+                "governance dataset" if p.get("src") else "Green Book",
+                (p.get("alt") or {}).get("n", ""),
             ])
 
     s = payload["stats"]

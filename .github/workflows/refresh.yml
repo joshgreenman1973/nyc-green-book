@@ -1,20 +1,35 @@
 name: Refresh directory
 
-# The Green Book dataset moves irregularly — the city refreshed it twice in the
-# week this was built — and the governance dataset is nominally annual but gets
-# off-cycle updates that are themselves a signal. Weekly keeps both current
-# without hammering anyone.
+# Follows NYC Open Data rather than a calendar.
+#
+# Every four hours a cheap check reads each dataset's own `rowsUpdatedAt` — two
+# metadata requests, no row data — and the full rebuild runs only when the city
+# has actually published something. The Green Book moved twice in the week this
+# was built, so a weekly schedule would have shown stale data for days.
+#
+# The Monday run is forced regardless: the NYC.gov press-contacts page carries
+# no update stamp, so the only way to catch a change there is to look.
 #
 # The build fails loud on a short read, so a failed run is a real failure worth
 # an email, not noise to suppress.
 
 on:
   schedule:
-    - cron: '0 11 * * 1'    # Mondays, ~07:00 ET
+    - cron: '20 */4 * * *'   # every 4 hours, offset off the hour
+    - cron: '0 11 * * 1'     # Mondays ~07:00 ET, forced
   workflow_dispatch:
+    inputs:
+      force:
+        description: 'Rebuild even if the city has published nothing new'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
 
 jobs:
   refresh:
@@ -29,21 +44,37 @@ jobs:
       - name: Install dependencies
         run: pip install requests beautifulsoup4
 
+      - name: Has the city published anything new?
+        id: check
+        # The weekly cron and a manual force skip the check entirely.
+        run: |
+          if [ "${{ github.event.schedule }}" = "0 11 * * 1" ] || \
+             [ "${{ inputs.force }}" = "true" ] || \
+             [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Forced run."
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            python3 scripts/check_freshness.py || true
+          fi
+
       - name: Test the matching rules
+        if: steps.check.outputs.changed == 'true'
         run: python3 scripts/test_matching.py
 
       - name: Rebuild
+        if: steps.check.outputs.changed == 'true'
         env:
           SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
         run: python3 scripts/build.py
 
       - name: Commit if the data moved
+        if: steps.check.outputs.changed == 'true'
         run: |
           git config user.name "Josh Greenman"
           git config user.email "josh.greenman@gmail.com"
           git add docs/data
           if git diff --cached --quiet; then
-            echo "No change in the city's data."
+            echo "Sources restamped but the directory is unchanged."
           else
             git commit -m "Refresh directory $(date -u +%Y-%m-%d)"
             git push

@@ -124,6 +124,16 @@ main{max-width:1180px;margin:0 auto;padding:0 0 96px}
   text-transform:uppercase;color:var(--flag);background:var(--flag-bg);
   padding:1.5px 5px;border-radius:2px;vertical-align:2px;margin-left:5px;
 }
+.supersede{
+  font-size:12.5px;color:var(--ink-3);margin-top:3px;line-height:1.35;
+}
+.supersede s{text-decoration-thickness:1px;opacity:.8}
+.note{
+  border-left:2.5px solid var(--green-3);background:var(--paper-2);
+  padding:9px 12px;margin-top:13px;font-size:13.5px;line-height:1.5;
+  color:var(--ink-2);border-radius:0 3px 3px 0;
+}
+.note b{color:var(--ink)}
 .kind{
   position:absolute;right:12px;top:12px;font-family:var(--mono);
   font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);
@@ -369,7 +379,9 @@ function buildIndex(){
       name: p.n || 'Vacant',
       sub: p.t,
       agency: p.a,
-      hay: fold([p.n, p.t, p.a, a.acronym, p.d.join(' '),
+      // The superseded name stays searchable: someone looking for Laurie Cumbo
+      // should land on the Cultural Affairs post and see who holds it now.
+      hay: fold([p.n, p.alt && p.alt.n, p.t, p.a, a.acronym, p.d.join(' '),
                  (p.p+p.p2+p.dp).replace(/\D/g,'')].join(' ')),
       digits: (p.p + ' ' + p.p2 + ' ' + p.dp).replace(/\D/g,''),
       vac: p.v
@@ -491,6 +503,9 @@ function rowHTML(r, q){
       <div class="nm">${p.n ? mark(p.n,q) : '<span style="color:var(--ink-3)">Vacant post</span>'}</div>
       <div class="ti">${mark(p.t,q)}</div>
       <div class="ag">${mark(p.a,q)}</div>
+      ${p.alt? `<div class="supersede">${p.src
+          ? `Green Book still lists <s>${mark(p.alt.n,q)}</s>`
+          : `Governance dataset still lists <s>${mark(p.alt.n,q)}</s>`}</div>`:''}
       ${p.d.length? `<div class="meta">${esc(p.d.join(' › '))}</div>`:''}
       ${acts.length? `<div class="acts">${acts.join('')}</div>`:''}
     </button>`;
@@ -589,13 +604,30 @@ function personSheet(p){
       `<a href="mailto:${esc(c.e)}">${esc(c.e)}</a>` +
       (c.n? ` <span style="color:var(--ink-3)">&mdash; ${esc(c.n)}</span>`:'')).join('<br>')));
   if(a.website) rows.push(dl('Website', `<a href="${esc(a.website)}" target="_blank" rel="noopener">${esc(a.website.replace(/^https?:\/\//,''))}</a>`));
+  rows.push(dl('Name from', p.src
+    ? 'Governance dataset (t3jq-9nkf)'
+    : 'Green Book (mdcw-n682)'));
   rows.push(dl('Source', `Green Book, updated ${new Date(D.sources.greenbook.updated).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`));
+
+  // Where the city's two files name different people, say so plainly and say
+  // which one is on screen. The phone number belongs to the desk, not the
+  // person, so it may still be the predecessor's line.
+  const note = p.alt ? (p.src
+    ? `<div class="note"><b>Two city files disagree about this post.</b>
+        The name above is from the governance dataset, which is maintained
+        continuously. The Green Book still lists <b>${esc(p.alt.n)}</b>.
+        The direct line is the desk's and may not have moved with the job.</div>`
+    : `<div class="note"><b>Two city files disagree about this post.</b>
+        The Green Book names an acting officeholder, so its name is shown here.
+        The governance dataset still lists <b>${esc(p.alt.n)}</b> as the
+        permanent holder.</div>`) : '';
 
   return `
     <div class="d-name">${p.n ? esc(p.n) : 'Vacant post'}${p.v?'<span class="vac">Vacant</span>':''}</div>
     <div class="d-title">${esc(p.t)}</div>
     <button class="d-agency" data-goto="a${esc(p.a)}" style="text-align:left">${esc(p.a)} &rarr;</button>
     ${p.d.length? `<div class="d-path">${p.d.map((x,i)=> (i? ' › ':'') + '<b>'+esc(x)+'</b>').join('')}</div>`:''}
+    ${note}
     ${acts.length? `<div class="bigacts">${acts.join('')}</div>`:''}
     <dl class="dl">${rows.join('')}</dl>`;
 }
@@ -745,8 +777,8 @@ function renderHeads(){
   const H = D.heads;
   const differs = H.filter(h => h.status === 'differs');
   const rest = H.filter(h => h.status !== 'differs');
-  const box = (src, o) => `<div class="hbox">
-      <div class="hsrc">${esc(src)}</div>
+  const box = (src, o, used) => `<div class="hbox" ${used?'style="outline:2px solid var(--green-2)"':''}>
+      <div class="hsrc">${esc(src)}${used?' · shown':''}</div>
       ${o ? `<div class="hn">${esc(o.n)}</div><div class="ht">${esc(o.t||'')}</div>`
           : `<div class="none">No head listed</div>`}
     </div>`;
@@ -759,19 +791,26 @@ function renderHeads(){
             h.status==='governance_only'?'Governance data only':'Neither names a head'}</span>
       </div>
       <div class="hgrid">
-        ${box('Green Book', h.gb)}
-        ${box('Governance dataset', h.gov)}
+        ${box('Green Book', h.gb, h.use === 'greenbook')}
+        ${box('Governance dataset', h.gov, h.use === 'governance')}
       </div>
+      ${h.why? `<div style="font-size:12.5px;color:var(--ink-3);margin-top:7px;line-height:1.45">${esc(h.why)}</div>`:''}
       ${h.gb && h.gb.p ? `<div class="acts">${actLink('tel:'+h.gb.tel, ICON.phone, h.gb.p, '')}</div>`:''}
     </div>`;
   $('#pane-heads').innerHTML = `
     <div class="intro" style="padding-bottom:2px">
       <p class="lede">Two official sources name the people who run New York's agencies.
-      They do not always name the same person.</p>
-      <p>The Green Book is the city's directory of record. The Office of Data Analytics
-      keeps a separate inventory of governance organizations that also names a principal
-      officer. Where they disagree, one of them is out of date &mdash; and it is worth
-      knowing which agencies those are before you pick up the phone.</p>
+      For ${differs.length} of them, they name different people.</p>
+      <p>The Green Book is the city's directory of record. The Office of Technology
+      and Innovation keeps a separate inventory of governance organizations that also
+      names a principal officer, and maintains it continuously &mdash; so where the two
+      disagree, this directory shows the governance name.</p>
+      <p>With one exception. When the Green Book calls someone <b>acting</b> or
+      <b>interim</b>, it is reporting a departure the governance file has not
+      registered, and its name is the newer one. That happens
+      ${H.filter(h => h.use === 'greenbook').length} times below.</p>
+      <p>Both names are always kept, and both stay searchable. Nothing is
+      discarded &mdash; you can see exactly what each file says.</p>
     </div>
     <div class="sec">Sources disagree <span class="mono" style="font-size:10px">${differs.length}</span></div>
     ${differs.map(card).join('')}
@@ -868,7 +907,10 @@ function renderAbout(){
       published source for them.</p>
 
       <div class="sec">What was done to it</div>
-      <p>Everything is fetched fresh on each build and fails loudly rather than
+      <p>The directory follows Open Data rather than a calendar: a check runs
+      every four hours against each dataset's own last-updated stamp, and a full
+      rebuild happens only when the city has actually published something.
+      Everything is fetched fresh on each build and fails loudly rather than
       quietly shipping a short read. Names, phone numbers and web addresses are
       normalized. The four columns the Green Book uses to store a division
       hierarchy are turned back into a tree. Phone numbers become tap-to-call
@@ -886,9 +928,19 @@ function renderAbout(){
       &ldquo;Alister Martin&rdquo; are one person; nicknames like Sam for Samuel
       are tolerated. A title only counts as an agency head if it is the whole
       title &mdash; Chief of Staff and Deputy Commissioner never qualify.</p>
-      <p>It is worth being blunt about what a disagreement does and does not mean:
-      it tells you the two files differ, not which one is right. Check before you
-      rely on either.</p>
+      <p><b>Where they disagree, this directory shows the governance name.</b>
+      That file is maintained continuously and is the better source on who
+      currently holds a post; the Green Book lags on political appointees.
+      ${D.people.filter(p=>p.src).length} listings are shown that way.</p>
+      <p>The exception is the Green Book's own freshness signal. When it calls
+      someone <b>acting</b> or <b>interim</b>, it is reporting a departure the
+      governance file has not registered, so the Green Book name wins. That
+      applies to ${D.heads.filter(h=>h.use==='greenbook').length} agencies.</p>
+      <p>Nothing is discarded. Both names are kept on the record, both remain
+      searchable, and every affected listing says which file its name came from
+      and what the other file says. One caveat worth stating: a direct phone
+      number belongs to the desk, not the person, so on a post that has changed
+      hands the line may still be the predecessor's.</p>
 
       <div class="sec">Take it with you</div>
       <p><a href="data/greenbook.csv" download>Download the full directory as CSV</a>

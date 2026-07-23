@@ -90,6 +90,31 @@ asserts a genuine disagreement:
 | `greenbook_only` | 7 | Only the Green Book names one |
 | `variant` | 0 | Same surname, unrelated given name |
 
+### Which name gets shown
+
+For the 16 `differs` agencies the directory has to display one name, and it
+shows the **governance dataset's**. That file is maintained continuously — the
+Office of Technology and Innovation takes corrections through a public form —
+while the Green Book lags on political appointees. 12 listings are rewritten
+this way.
+
+**Except where the Green Book says `Acting` or `Interim`.** That is the Green
+Book reporting a departure the governance file has not registered, which makes
+it the newer source for that post, so its name wins. This applies to 4 agencies:
+Investigation, Design and Construction, Taxi & Limousine, and the Board of
+Correction. The rule is worth stating because it is the counter-example to the
+default: neither file is uniformly fresher, and the acting/interim flag is the
+one reliable signal of which one moved last.
+
+**Nothing is discarded.** Every rewritten listing keeps the superseded name, and
+both names stay searchable — searching "Cumbo" lands on the Cultural Affairs
+commissioner's post and shows Diya Vij holds it, with the Green Book's name
+struck through. In the CSV this is the `name_source` and `other_source_name`
+columns. In the JSON it is `src` and `alt` on the person record.
+
+**One caveat.** A direct phone number belongs to the desk, not the person. On a
+post that has changed hands the line may still reach the predecessor's office.
+
 `scripts/test_matching.py` holds 38 cases covering every rule above. Run it
 before trusting a change to the comparison logic:
 
@@ -97,11 +122,11 @@ before trusting a change to the comparison logic:
 python3 scripts/test_matching.py
 ```
 
-**What a disagreement does not mean.** It tells you the two city files differ.
-It does not tell you which one is right, and it is not evidence that either
-official is or is not in post. Treat a flag as a reason to check, never as a
-finding. During a mayoral transition both files lag reality in different places
-and at different speeds.
+**What a disagreement does not mean.** The rule above picks the likelier of two
+official answers; it does not verify either against reality, and it is not
+evidence that any individual is or is not in post. During a mayoral transition
+both files lag in different places and at different speeds. Treat a flagged post
+as a reason to check, never as a finding.
 
 ## Email addresses
 
@@ -162,5 +187,21 @@ python3 scripts/test_matching.py
 python3 scripts/build.py
 ```
 
-Writes `docs/data/greenbook.json` and `docs/data/greenbook.csv`. A GitHub Action
-runs the same commands weekly and commits only when the output changes.
+Writes `docs/data/greenbook.json` and `docs/data/greenbook.csv`.
+
+### Refresh cadence
+
+The directory follows Open Data rather than a calendar. `scripts/check_freshness.py`
+reads each dataset's own `rowsUpdatedAt` — two metadata requests, no row data —
+and compares it to the stamps recorded in the last build. A GitHub Action runs
+that check **every four hours** and rebuilds only when the city has actually
+published something. This matters: the Green Book moved twice in the week this
+was built, so a weekly schedule would have served stale data for days.
+
+A **Monday run is forced** regardless, because the NYC.gov press-contacts page
+carries no update stamp and the only way to catch a change there is to look.
+
+The check fails open: if it cannot reach Socrata it exits 2 and the rebuild runs
+anyway, on the principle that a redundant build is cheaper than a missed one.
+The build itself commits only when the output actually differs, so a restamped
+source with unchanged rows produces no commit.

@@ -28,7 +28,11 @@ This is the same public data, reorganized:
   does.
 - **Built for a phone.** Big tap targets, a swipe-away detail sheet, dark mode.
 - **Who runs what** — the two datasets that name agency heads disagree about 16
-  of them. Knowing which ones before you call is the point.
+  of them. The directory shows the governance dataset's name, since that file is
+  maintained continuously — except where the Green Book says *acting* or
+  *interim*, which means it caught a departure the other file missed. Both names
+  are kept and both stay searchable: search `Cumbo` and you land on the Cultural
+  Affairs post with Diya Vij in it.
 - **Vacancies** — 128 posts the city lists with nobody in them, grouped by
   agency.
 - **Addresses** — 2,609 listings sit at 200 addresses. Tap one to see every
@@ -59,7 +63,17 @@ python3 scripts/build.py           # rewrites docs/data/
 ```
 
 The build fails loudly on a short read rather than quietly shipping a thinner
-directory. A GitHub Action reruns it weekly and commits only on change.
+directory.
+
+**Refresh follows Open Data, not a calendar.** A GitHub Action checks each
+dataset's own `rowsUpdatedAt` every four hours and rebuilds only when the city
+has published something — the Green Book moved twice in the week this was built,
+so weekly would have meant days of stale data. Mondays run regardless, because
+the NYC.gov press page carries no update stamp.
+
+```bash
+python3 scripts/check_freshness.py   # exit 0 = rebuild, 1 = nothing new
+```
 
 ## Not affiliated with the City of New York
 
