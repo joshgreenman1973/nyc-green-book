@@ -67,6 +67,10 @@ jobs:
           SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
         run: python3 scripts/build.py
 
+      - name: Export the administration contact list
+        if: steps.check.outputs.changed == 'true'
+        run: python3 scripts/export_admin.py
+
       - name: Commit if the data moved
         if: steps.check.outputs.changed == 'true'
         run: |

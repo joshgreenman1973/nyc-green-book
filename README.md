@@ -39,6 +39,11 @@ This is the same public data, reorganized:
   agency that answers there.
 - **[Download the whole thing as CSV](https://joshgreenman1973.github.io/nyc-green-book/data/greenbook.csv).**
   The city offers no export.
+- **[The mayoral administration as a contact list](https://joshgreenman1973.github.io/nyc-green-book/data/mayoral_administration.csv)**
+  — 62 people: the mayor, the deputy mayors, the chief of staff and every agency
+  head under them, with direct lines where published. Separately elected offices
+  are excluded on purpose. The email column is blank because the city publishes
+  no email address for any of these posts.
 
 ## Sources
 

@@ -166,6 +166,44 @@ words that distinguish one body from another (`board`, `commission`,
 `authority`, `corporation`, `fund`, `museum`) never are. 39 of 124 agencies get
 a press office; the other 21 press offices remain searchable on their own.
 
+## The administration contact list
+
+`scripts/export_admin.py` writes `docs/data/mayoral_administration.csv`: the
+senior ranks of the executive branch under the mayor, 62 people.
+
+**Scope.** The Mayor's Office, mayoral agencies and mayoral offices, plus the
+public-benefit corporations the mayor appoints (EDC, HDC, H+H, NYCHA, SCA).
+Separately elected offices are excluded by design — the comptroller, the public
+advocate, the borough presidents, the district attorneys and the Council are not
+the administration. Scope is set from the governance dataset's
+`organization_type`, not by guessing from names.
+
+**Tiers**, so the list can be cut to the size you need (`--max-tier`):
+
+| Tier | People | Who |
+|---|---|---|
+| 1 | 8 | The mayor, the first deputy mayor, the deputy mayors, the mayor's chief of staff |
+| 2 | 54 | Agency and office heads — the same head-detection rules used everywhere else |
+| 3 | ~400 | First deputies, chiefs of staff, general counsels (off by default) |
+
+A chief of staff counts at tier 1 only in the Mayor's Office and only at the top
+of it; every counsel and commissioner has one, and those are not tier 1.
+Duplicate listings are collapsed on name + title + agency, because the Green Book
+lists some officials once per body they sit on. Vacant posts are dropped — they
+are not contacts.
+
+**The email column is empty, and that is the finding.** The City of New York
+publishes no email address for any of these 62 posts. Not in the Greenbook, not
+in the governance inventory, not on the agency pages, and not for the mayor. The
+82 addresses this project does carry are all press-office staff, and none of them
+is one of these 62 people — the overlap is zero. The column is kept so the file
+is ready to fill in from your own reporting. It is never populated by inferring
+an address from a name, which is the one thing that would make this file worse
+than useless.
+
+40 of the 62 have a published direct phone. Tier 1 has none: the city publishes
+no direct line for the mayor or any deputy mayor.
+
 ## Known limits
 
 - **The open dataset is narrower than the website.** Green Book Online also
