@@ -28,11 +28,11 @@ This is the same public data, reorganized:
   does.
 - **Built for a phone.** Big tap targets, a swipe-away detail sheet, dark mode.
 - **Who runs what** — the two datasets that name agency heads disagree about 16
-  of them. The directory shows the governance dataset's name, since that file is
-  maintained continuously — except where the Green Book says *acting* or
-  *interim*, which means it caught a departure the other file missed. Both names
-  are kept and both stay searchable: search `Cumbo` and you land on the Cultural
-  Affairs post with Diya Vij in it.
+  of them. The directory shows the governance dataset's name in every case, since
+  that file is maintained continuously, and marks the Green Book's as superseded.
+  It's a best guess, not a verdict — neither file is guaranteed current during a
+  transition. Both names are kept and both stay searchable: search `Cumbo` and
+  you land on the Cultural Affairs post with Diya Vij in it.
 - **Vacancies** — 128 posts the city lists with nobody in them, grouped by
   agency.
 - **Addresses** — 2,609 listings sit at 200 addresses. Tap one to see every

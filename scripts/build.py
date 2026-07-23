@@ -729,45 +729,34 @@ def main():
             "status": status,
         })
     # ---- resolve the disagreements ----------------------------------------
-    # The governance inventory is maintained continuously and is the better
-    # source on who currently holds a post; the Green Book lags on political
-    # appointees. But it is not uniformly fresher, and there is one signal that
-    # reliably says so: when the Green Book calls someone Acting or Interim, it
-    # is reporting a vacancy the governance file has not caught up with, and
-    # its name is the newer one. Governance wins by default, the Green Book
-    # wins on that signal, and both names are always kept.
-    ACTING = re.compile(r"\b(acting|interim)\b", re.I)
+    # The governance inventory is maintained continuously — the Office of
+    # Technology and Innovation takes corrections through a public form — and is
+    # the better source on who currently holds a post; the Green Book lags on
+    # political appointees. So where the two name different people, the
+    # governance name is shown.
+    #
+    # There is deliberately no cleverness beyond that. An earlier version
+    # treated a Green Book "Acting"/"Interim" title as proof the Green Book was
+    # the newer source, but that does not hold: an acting official can be a
+    # holdover from the previous administration whom the governance file has
+    # ALREADY replaced with a permanent appointee. The flag says nothing
+    # reliable about which file moved last, so it is not used. Governance wins
+    # every disagreement; both names are always kept.
     applied = 0
     for h in heads:
         if h["status"] != "differs":
             continue
-        gb_acting = bool(ACTING.search(h["gb"]["t"]))
-        h["use"] = "greenbook" if gb_acting else "governance"
-        h["why"] = ("The Green Book names an acting officeholder, which the "
-                    "governance dataset has not registered."
-                    if gb_acting else
-                    "The governance dataset is maintained continuously; the "
-                    "Green Book lags on political appointees.")
-        if h["use"] == "governance":
-            # Rewrite the person record, keeping the superseded name attached.
-            for p in people:
-                if p["a"] == h["agency"] and p["n"] == h["gb"]["n"] \
-                        and p["t"] == h["gb"]["t"]:
-                    p["alt"] = {"n": p["n"], "src": "Green Book"}
-                    p["n"] = h["gov"]["n"]
-                    p["src"] = "governance"
-                    applied += 1
-                    break
-        else:
-            for p in people:
-                if p["a"] == h["agency"] and p["n"] == h["gb"]["n"] \
-                        and p["t"] == h["gb"]["t"]:
-                    p["alt"] = {"n": h["gov"]["n"], "src": "governance dataset"}
-                    break
+        for p in people:
+            if p["a"] == h["agency"] and p["n"] == h["gb"]["n"] \
+                    and p["t"] == h["gb"]["t"]:
+                p["alt"] = {"n": p["n"], "src": "Green Book"}
+                p["n"] = h["gov"]["n"]
+                p["src"] = "governance"
+                applied += 1
+                break
 
-    log(f"  applied {applied} governance names over the Green Book; "
-        f"kept {sum(1 for h in heads if h.get('use') == 'greenbook')} "
-        f"Green Book acting officeholders")
+    log(f"  applied {applied} governance names over the Green Book "
+        f"across {sum(1 for h in heads if h['status']=='differs')} conflicts")
 
     heads.sort(key=lambda h: (h["status"] != "differs", -h["n"]))
     conflicts = [h for h in heads if h["status"] == "differs"]

@@ -93,18 +93,23 @@ asserts a genuine disagreement:
 ### Which name gets shown
 
 For the 16 `differs` agencies the directory has to display one name, and it
-shows the **governance dataset's**. That file is maintained continuously — the
-Office of Technology and Innovation takes corrections through a public form —
-while the Green Book lags on political appointees. 12 listings are rewritten
-this way.
+shows the **governance dataset's** in every case. That file is maintained
+continuously — the Office of Technology and Innovation takes corrections through
+a public form — while the Green Book lags on political appointees. All 16
+listings are rewritten this way.
 
-**Except where the Green Book says `Acting` or `Interim`.** That is the Green
-Book reporting a departure the governance file has not registered, which makes
-it the newer source for that post, so its name wins. This applies to 4 agencies:
-Investigation, Design and Construction, Taxi & Limousine, and the Board of
-Correction. The rule is worth stating because it is the counter-example to the
-default: neither file is uniformly fresher, and the acting/interim flag is the
-one reliable signal of which one moved last.
+**No exceptions, and here is one that was tried and removed.** An earlier version
+treated a Green Book `Acting` or `Interim` title as proof the Green Book was the
+newer source and let it override governance. That reasoning is wrong: an acting
+official can be a holdover from the *previous* administration whom the governance
+file has already replaced with a permanent appointee. The flag tells you the post
+is unsettled; it tells you nothing about which of the two files recorded the most
+recent change. So it is not used, and the rule stays simple — governance wins
+every disagreement.
+
+**This is a best guess, not a verdict.** It picks the likelier of two official
+answers. Neither file is guaranteed current during a transition, and confirming
+who holds a given post means checking a primary source.
 
 **Nothing is discarded.** Every rewritten listing keeps the superseded name, and
 both names stay searchable — searching "Cumbo" lands on the Cultural Affairs
@@ -112,8 +117,9 @@ commissioner's post and shows Diya Vij holds it, with the Green Book's name
 struck through. In the CSV this is the `name_source` and `other_source_name`
 columns. In the JSON it is `src` and `alt` on the person record.
 
-**One caveat.** A direct phone number belongs to the desk, not the person. On a
-post that has changed hands the line may still reach the predecessor's office.
+**One more caveat.** A direct phone number belongs to the desk, not the person.
+On a post that has changed hands the line may still reach the predecessor's
+office.
 
 `scripts/test_matching.py` holds 38 cases covering every rule above. Run it
 before trusting a change to the comparison logic:
