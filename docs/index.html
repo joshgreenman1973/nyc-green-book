@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Green Book — who runs New York City</title>
+<meta name="description" content="The City of New York's official directory, rebuilt: 2,609 officials, 124 agencies, every phone number one tap away.">
+<meta name="theme-color" content="#0E3A26">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230E3A26'/%3E%3Crect x='4' y='4' width='3' height='24' fill='%23F2EFE4'/%3E%3Crect x='10' y='7' width='18' height='2.5' fill='%23F2EFE4'/%3E%3Crect x='10' y='13' width='18' height='2.5' fill='%23F2EFE4'/%3E%3Crect x='10' y='19' width='12' height='2.5' fill='%23F2EFE4'/%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#F2EFE4; --paper-2:#EAE6D8; --card:#FBFAF4;
+  --ink:#17211B; --ink-2:#4A5751; --ink-3:#6E7B74;
+  --green:#0E3A26; --green-2:#1B5E3F; --green-3:#2E7D57;
+  --flag:#8C2A2A; --flag-bg:#F6E7E4;
+  --ok:#1B5E3F;
+  --rule:#C9C3B0; --rule-2:#DEDACB;
+  --sans:'IBM Plex Sans Condensed',system-ui,-apple-system,sans-serif;
+  --serif:'IBM Plex Serif',Georgia,serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --sheet:0;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#141917; --paper-2:#1B221E; --card:#1C2320;
+    --ink:#E8E6DC; --ink-2:#A8B2AB; --ink-3:#7E8A83;
+    --green:#8FD4AC; --green-2:#6FC495; --green-3:#4EA97A;
+    --flag:#E9928C; --flag-bg:#38211F;
+    --ok:#6FC495;
+    --rule:#2E3833; --rule-2:#252E29;
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.4;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior-y:none;
+}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ---------- masthead ---------- */
+header{
+  position:sticky;top:0;z-index:50;background:var(--green);
+  padding:env(safe-area-inset-top) 0 0;
+}
+@media (prefers-color-scheme:dark){header{background:#0C120F;border-bottom:1px solid var(--rule)}}
+.mast{display:flex;align-items:baseline;gap:10px;padding:11px 14px 9px;max-width:1180px;margin:0 auto}
+.mast h1{
+  font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:-.015em;
+  margin:0;color:#F2EFE4;white-space:nowrap;
+}
+.mast .sub{
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:#9DC6AE;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+@media (prefers-color-scheme:dark){.mast h1{color:var(--ink)}.mast .sub{color:var(--green-3)}}
+
+/* ---------- search ---------- */
+.searchwrap{background:var(--green);padding:0 14px 11px}
+@media (prefers-color-scheme:dark){.searchwrap{background:#0C120F}}
+.searchwrap .inner{max-width:1180px;margin:0 auto;position:relative}
+#q{
+  width:100%;height:46px;border-radius:3px;border:1px solid rgba(0,0,0,.25);
+  background:var(--card);color:var(--ink);
+  font-family:var(--sans);font-size:16.5px;font-weight:500;
+  padding:0 40px 0 38px;outline:none;
+}
+#q::placeholder{color:var(--ink-3);font-weight:400}
+#q::-webkit-search-cancel-button,#q::-webkit-search-decoration{-webkit-appearance:none;appearance:none}
+#q:focus{box-shadow:0 0 0 2.5px var(--green-3)}
+.si{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:17px;height:17px;opacity:.5;pointer-events:none}
+#clear{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;border-radius:50%;color:var(--ink-3);font-size:19px;
+  display:none;align-items:center;justify-content:center;
+}
+#clear.on{display:flex}
+
+/* ---------- tabs ---------- */
+nav.tabs{
+  display:flex;gap:0;overflow-x:auto;scrollbar-width:none;
+  background:var(--paper-2);border-bottom:1px solid var(--rule);
+  position:sticky;top:0;z-index:40;
+}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs .in{display:flex;max-width:1180px;margin:0 auto;width:100%;padding:0 6px}
+nav.tabs button{
+  padding:11px 12px 9px;font-size:11.5px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);white-space:nowrap;
+  border-bottom:2.5px solid transparent;margin-bottom:-1px;
+}
+nav.tabs button[aria-selected=true]{color:var(--green-2);border-bottom-color:var(--green-2)}
+nav.tabs button .n{font-family:var(--mono);font-size:10px;opacity:.65;margin-left:4px}
+
+/* ---------- layout ---------- */
+main{max-width:1180px;margin:0 auto;padding:0 0 96px}
+.pane{display:none}
+.pane.on{display:block}
+
+/* ---------- listing rows ---------- */
+.rows{list-style:none;margin:0;padding:0}
+.row{
+  display:block;width:100%;text-align:left;padding:11px 14px 10px;
+  border-bottom:1px solid var(--rule-2);position:relative;
+}
+.row:active{background:var(--paper-2)}
+.row .nm{font-size:16.5px;font-weight:600;letter-spacing:-.005em;line-height:1.25}
+.row .nm em{font-style:normal;background:rgba(46,125,87,.22);border-radius:2px;padding:0 1px}
+.row .ti{font-size:14px;color:var(--ink-2);line-height:1.3;margin-top:1px}
+.row .ag{
+  font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--green-2);font-weight:600;margin-top:3px;
+}
+.row .meta{font-size:12.5px;color:var(--ink-3);margin-top:2px}
+.vac{
+  display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--flag);background:var(--flag-bg);
+  padding:1.5px 5px;border-radius:2px;vertical-align:2px;margin-left:5px;
+}
+.kind{
+  position:absolute;right:12px;top:12px;font-family:var(--mono);
+  font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);
+  border:1px solid var(--rule);border-radius:2px;padding:1px 4px;
+}
+
+/* actions on a row */
+.acts{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+.act{
+  display:inline-flex;align-items:center;gap:5px;
+  min-height:34px;padding:0 11px;border-radius:3px;
+  border:1px solid var(--green-2);color:var(--green-2);
+  font-size:13px;font-weight:600;text-decoration:none;
+}
+.act.solid{background:var(--green-2);color:#F2EFE4;border-color:var(--green-2)}
+@media (prefers-color-scheme:dark){.act.solid{color:#0C120F}}
+.act svg{width:13px;height:13px;flex:none}
+.act.ghost{border-color:var(--rule);color:var(--ink-2)}
+
+/* ---------- section heads ---------- */
+.sec{
+  padding:15px 14px 6px;font-size:10.5px;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);
+  display:flex;align-items:baseline;gap:8px;
+}
+.sec:after{content:"";flex:1;height:1px;background:var(--rule)}
+
+/* ---------- detail sheet ---------- */
+#scrim{
+  position:fixed;inset:0;background:rgba(10,20,15,.45);z-index:60;
+  opacity:0;pointer-events:none;transition:opacity .18s;
+}
+#scrim.on{opacity:1;pointer-events:auto}
+#sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:70;
+  background:var(--card);border-top:3px solid var(--green-2);
+  border-radius:12px 12px 0 0;max-height:88vh;overflow-y:auto;
+  transform:translateY(101%);transition:transform .22s cubic-bezier(.3,.8,.4,1);
+  padding-bottom:calc(24px + env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling:touch;
+}
+#sheet.on{transform:translateY(0)}
+.grab{width:38px;height:4px;border-radius:3px;background:var(--rule);margin:9px auto 2px}
+.sheet-in{padding:6px 18px 8px}
+#close{
+  position:absolute;right:8px;top:8px;width:36px;height:36px;border-radius:50%;
+  color:var(--ink-3);font-size:22px;line-height:1;
+}
+.d-name{font-family:var(--serif);font-size:25px;font-weight:700;letter-spacing:-.02em;line-height:1.15;margin:6px 44px 0 0}
+.d-title{font-size:16px;color:var(--ink-2);margin-top:4px;line-height:1.3}
+.d-agency{
+  font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--green-2);font-weight:700;margin-top:9px;
+}
+.d-path{font-size:13px;color:var(--ink-3);margin-top:5px;line-height:1.45}
+.d-path b{font-weight:500;color:var(--ink-2)}
+.bigacts{display:flex;gap:9px;margin:15px 0 4px;flex-wrap:wrap}
+.bigacts .act{min-height:44px;padding:0 15px;font-size:14.5px;flex:1 1 auto;justify-content:center;min-width:126px}
+.dl{border-top:1px solid var(--rule-2);margin-top:15px;padding-top:11px}
+.dl-row{display:flex;gap:12px;padding:6px 0;font-size:14.5px;align-items:baseline}
+.dl-row dt{
+  flex:0 0 86px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:700;padding-top:3px;
+}
+.dl-row dd{margin:0;flex:1;min-width:0;word-break:break-word}
+.dl-row a{color:var(--green-2);text-decoration:none;font-weight:600}
+
+/* ---------- agency + tree ---------- */
+.tree{list-style:none;margin:4px 0 0;padding:0}
+.tree ul{list-style:none;margin:0;padding-left:13px;border-left:1px solid var(--rule-2)}
+.tree li{margin:0}
+.tnode{
+  display:flex;width:100%;text-align:left;gap:7px;align-items:baseline;
+  padding:6px 2px;font-size:14.5px;border-bottom:1px solid var(--rule-2);
+}
+.tnode .tn{flex:1;min-width:0}
+.tnode .tc{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+.tw{width:11px;flex:none;color:var(--green-3);font-size:10px;padding-top:2px}
+
+/* ---------- status chips ---------- */
+.chip{
+  display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;padding:2px 6px;border-radius:2px;
+}
+.chip.differs{color:var(--flag);background:var(--flag-bg)}
+.chip.agree{color:var(--ok);background:rgba(27,94,63,.11)}
+.chip.one{color:var(--ink-3);background:var(--paper-2)}
+@media (prefers-color-scheme:dark){.chip.agree{background:rgba(111,196,149,.14)}}
+
+.headcard{padding:12px 14px;border-bottom:1px solid var(--rule-2)}
+.headcard .hag{font-size:15.5px;font-weight:600;line-height:1.25}
+.hgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px}
+@media (max-width:420px){.hgrid{grid-template-columns:1fr}}
+.hbox{background:var(--paper-2);border-radius:3px;padding:8px 10px}
+.hbox .hsrc{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.hbox .hn{font-size:15px;font-weight:600;margin-top:3px;line-height:1.2}
+.hbox .ht{font-size:12.5px;color:var(--ink-2);margin-top:2px;line-height:1.25}
+.hbox .none{font-size:13px;color:var(--ink-3);font-style:italic;margin-top:3px}
+
+/* ---------- intro / empty ---------- */
+.intro{padding:20px 16px 8px;max-width:640px}
+.intro p{font-size:15px;line-height:1.55;color:var(--ink-2);margin:0 0 11px}
+.intro .lede{font-family:var(--serif);font-size:18px;line-height:1.45;color:var(--ink)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:16px 0 4px}
+.stat{background:var(--paper);padding:11px 10px}
+.stat .v{font-family:var(--mono);font-size:21px;font-weight:600;letter-spacing:-.03em;color:var(--green-2);line-height:1}
+.stat .l{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin-top:5px;font-weight:600;line-height:1.25}
+.empty{padding:44px 20px;text-align:center;color:var(--ink-3);font-size:15px}
+.more{
+  display:block;width:100%;padding:15px;font-size:13px;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--green-2);
+  border-bottom:1px solid var(--rule-2);
+}
+.hint{padding:9px 14px;font-size:12.5px;color:var(--ink-3);border-bottom:1px solid var(--rule-2)}
+.hint kbd{font-family:var(--mono);font-size:11px;background:var(--paper-2);border:1px solid var(--rule);border-radius:2px;padding:1px 4px}
+
+footer{
+  border-top:1px solid var(--rule);margin-top:26px;padding:18px 16px 40px;
+  font-size:12.5px;color:var(--ink-3);line-height:1.6;
+}
+footer a{color:var(--green-2);text-decoration:none;font-weight:600}
+.aibtn{
+  display:inline-block;margin-top:12px;border:1px solid var(--flag);color:var(--flag);
+  border-radius:3px;padding:5px 10px;font-size:10.5px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+}
+#aipop{
+  display:none;margin-top:9px;background:#16233A;color:#D8E2F2;
+  border-radius:4px;padding:12px 14px;font-size:13px;line-height:1.55;max-width:620px;
+}
+#aipop.on{display:block}
+#aipop b{color:#fff}
+
+@media (min-width:860px){
+  .mast h1{font-size:22px}
+  .row{padding:12px 16px 11px}
+  #sheet{
+    left:auto;right:0;top:0;bottom:0;width:472px;max-height:100vh;
+    border-radius:0;border-top:none;border-left:3px solid var(--green-2);
+    transform:translateX(101%);
+  }
+  #sheet.on{transform:translateX(0)}
+  .grab{display:none}
+  .sheet-in{padding:20px 24px 8px}
+}
+@media (prefers-reduced-motion:reduce){#sheet,#scrim{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mast">
+    <h1>The Green Book</h1>
+    <span class="sub" id="masthead-sub">Who runs New York City</span>
+  </div>
+  <div class="searchwrap"><div class="inner">
+    <svg class="si" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+    <input id="q" type="search" autocomplete="off" autocorrect="off" autocapitalize="off"
+           spellcheck="false" enterkeyhint="search"
+           placeholder="Search a name, title, agency or phone number">
+    <button id="clear" aria-label="Clear search">&times;</button>
+  </div></div>
+</header>
+
+<nav class="tabs" role="tablist"><div class="in">
+  <button role="tab" data-tab="find" aria-selected="true">Directory</button>
+  <button role="tab" data-tab="agencies" aria-selected="false">Agencies <span class="n" id="n-ag"></span></button>
+  <button role="tab" data-tab="heads" aria-selected="false">Who runs what</button>
+  <button role="tab" data-tab="press" aria-selected="false">Press offices <span class="n" id="n-pr"></span></button>
+  <button role="tab" data-tab="vacant" aria-selected="false">Vacancies <span class="n" id="n-vc"></span></button>
+  <button role="tab" data-tab="addresses" aria-selected="false">Addresses <span class="n" id="n-ad"></span></button>
+  <button role="tab" data-tab="about" aria-selected="false">About</button>
+</div></nav>
+
+<main>
+  <section class="pane on" id="pane-find"></section>
+  <section class="pane" id="pane-agencies"></section>
+  <section class="pane" id="pane-heads"></section>
+  <section class="pane" id="pane-press"></section>
+  <section class="pane" id="pane-vacant"></section>
+  <section class="pane" id="pane-addresses"></section>
+  <section class="pane" id="pane-about"></section>
+</main>
+
+<div id="scrim"></div>
+<aside id="sheet" role="dialog" aria-modal="true" aria-label="Listing detail">
+  <div class="grab"></div>
+  <button id="close" aria-label="Close">&times;</button>
+  <div class="sheet-in" id="sheet-body"></div>
+</aside>
+
+<script>
+const ICON = {
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 16.9v2.6a1.8 1.8 0 0 1-2 1.8 17.6 17.6 0 0 1-7.7-2.7 17.3 17.3 0 0 1-5.3-5.3A17.6 17.6 0 0 1 3.3 5.6 1.8 1.8 0 0 1 5.1 3.6h2.6a1.8 1.8 0 0 1 1.8 1.6c.1.9.3 1.7.6 2.5a1.8 1.8 0 0 1-.4 1.9L8.6 10.7a14 14 0 0 0 5.3 5.3l1.1-1.1a1.8 1.8 0 0 1 1.9-.4c.8.3 1.6.5 2.5.6a1.8 1.8 0 0 1 1.6 1.8z"/></svg>',
+  mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="M3 6l9 6.5L21 6"/></svg>',
+  link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 11a4.5 4.5 0 0 0-6.6-.4L5 13a4.5 4.5 0 0 0 6.4 6.4l1.3-1.3"/><path d="M10 13a4.5 4.5 0 0 0 6.6.4L19 11a4.5 4.5 0 0 0-6.4-6.4l-1.3 1.3"/></svg>',
+  map:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>',
+  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 5.5h-9a2 2 0 0 0-2 2v9"/></svg>'
+};
+
+let D = null, IDX = [], SHOWN = 0, CURQ = '';
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const fold = s => (s||'').toLowerCase()
+  .normalize('NFKD').replace(/[̀-ͯ]/g,'')
+  .replace(/[^a-z0-9]+/g,' ').trim();
+
+// ---------------------------------------------------------------- load
+fetch('data/greenbook.json')
+  .then(r => { if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+  .then(d => { D = d; boot(); })
+  .catch(e => {
+    $('#pane-find').innerHTML =
+      '<div class="empty">The directory could not be loaded.<br><span class="mono" style="font-size:12px">'
+      + esc(e.message) + '</span></div>';
+  });
+
+function boot(){
+  buildIndex();
+  $('#n-ag').textContent = D.agencies.length;
+  $('#n-pr').textContent = D.press.length;
+  $('#n-vc').textContent = D.stats.vacant;
+  $('#n-ad').textContent = D.buildings.length;
+  const dt = new Date(D.sources.greenbook.updated);
+  $('#masthead-sub').textContent = 'Updated ' + dt.toLocaleDateString('en-US',
+    {month:'short', day:'numeric', year:'numeric'});
+  renderIntro();
+  wire();
+  route();
+}
+
+// ---------------------------------------------------------------- index
+function buildIndex(){
+  const agByName = {};
+  D.agencies.forEach(a => agByName[a.name] = a);
+
+  D.people.forEach(p => {
+    const a = agByName[p.a] || {};
+    IDX.push({
+      kind:'person', id:'p'+p.i, ref:p,
+      name: p.n || 'Vacant',
+      sub: p.t,
+      agency: p.a,
+      hay: fold([p.n, p.t, p.a, a.acronym, p.d.join(' '),
+                 (p.p+p.p2+p.dp).replace(/\D/g,'')].join(' ')),
+      digits: (p.p + ' ' + p.p2 + ' ' + p.dp).replace(/\D/g,''),
+      vac: p.v
+    });
+  });
+
+  D.agencies.forEach(a => {
+    IDX.push({
+      kind:'agency', id:'a'+a.name, ref:a,
+      name:a.name, sub:(a.acronym? a.acronym+' · ':'') + a.n + ' listings',
+      agency:'', hay: fold([a.name, a.acronym, a.section].join(' ')),
+      digits:(a.phone||'').replace(/\D/g,''), vac:0
+    });
+  });
+
+  D.press.forEach(o => o.contacts.forEach((c,i) => {
+    IDX.push({
+      kind:'press', id:'r'+o.office+i, ref:{o,c},
+      name: c.n || (o.office + ' press office'),
+      sub: (c.t? c.t+' · ':'') + o.office + ' press office',
+      agency:'', hay: fold([c.n, c.t, o.office, 'press media', c.e].join(' ')),
+      digits:(c.p||'').replace(/\D/g,''), vac:0
+    });
+  }));
+
+  D.buildings.forEach(b => {
+    IDX.push({
+      kind:'address', id:'b'+b.k, ref:b,
+      name: b.addr, sub: [b.city, b.zip].filter(Boolean).join(' ') + ' · ' + b.n + ' listings',
+      agency:'', hay: fold([b.addr, b.city, b.zip].join(' ')), digits:'', vac:0
+    });
+  });
+}
+
+// ---------------------------------------------------------------- search
+function search(q){
+  const raw = q.trim();
+  if(!raw) return [];
+  const digits = raw.replace(/\D/g,'');
+  const isPhone = digits.length >= 3 && /^[\d\s().+-]+$/.test(raw);
+  const toks = fold(raw).split(' ').filter(Boolean);
+  const out = [];
+
+  for(const r of IDX){
+    let score = 0;
+    if(isPhone){
+      if(r.digits && r.digits.includes(digits)) score = 900 - r.digits.indexOf(digits);
+      else continue;
+    } else {
+      if(!toks.every(t => r.hay.includes(t))) continue;
+      const nm = fold(r.name);
+      const words = nm.split(' ');
+      const first = toks[0];
+      score = 100;
+      if(nm === fold(raw)) score += 900;
+      // A whole word that IS the query beats a word that merely starts with
+      // it: searching "tisch" should surface Tisch above Tischelle.
+      else if(toks.every(t => words.includes(t))) score += 620;
+      else if(nm.startsWith(first)) score += 420;
+      else if(words.some(w => w.startsWith(first))) score += 300;
+      if(fold(r.sub).includes(toks.join(' '))) score += 60;
+      // A named person outranks a stub; agencies outrank their own staff on
+      // a bare agency name.
+      if(r.kind === 'agency') score += 150;
+      if(r.kind === 'press') score += 40;
+      if(r.kind === 'address') score -= 40;
+      if(r.vac) score -= 120;
+      score -= Math.min(r.name.length, 60) * 0.4;
+    }
+    out.push([score, r]);
+  }
+  out.sort((a,b) => b[0]-a[0] || a[1].name.localeCompare(b[1].name));
+  return out.map(x => x[1]);
+}
+
+function mark(text, q){
+  const t = esc(text);
+  const toks = fold(q).split(' ').filter(Boolean);
+  if(!toks.length) return t;
+  try{
+    const re = new RegExp('(' + toks.map(x =>
+      x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|') + ')', 'gi');
+    return t.replace(re, '<em>$1</em>');
+  }catch(e){ return t; }
+}
+
+// ---------------------------------------------------------------- render
+function renderIntro(){
+  const s = D.stats;
+  const gb = new Date(D.sources.greenbook.updated).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  $('#pane-find').innerHTML = `
+  <div class="intro">
+    <p class="lede">The city's own directory, rebuilt. Every official the City of New York
+    publishes, searchable in one box, with every phone number one tap from a call.</p>
+    <p>Start typing a name, a job title, an agency, or a phone number you want
+    identified. Nothing here is guessed at &mdash; it is the city's published
+    record, reorganized.</p>
+    <div class="stats">
+      <div class="stat"><div class="v">${s.people.toLocaleString()}</div><div class="l">Listings</div></div>
+      <div class="stat"><div class="v">${s.phones.toLocaleString()}</div><div class="l">Direct lines</div></div>
+      <div class="stat"><div class="v">${s.agencies}</div><div class="l">Agencies</div></div>
+      <div class="stat"><div class="v">${s.press_emails}</div><div class="l">Press emails</div></div>
+      <div class="stat"><div class="v">${s.vacant}</div><div class="l">Vacant posts</div></div>
+      <div class="stat"><div class="v">${s.buildings}</div><div class="l">Addresses</div></div>
+    </div>
+    <p style="font-size:13px;margin-top:14px">Green Book updated ${gb}.
+    <a href="#" data-tab-link="about" style="color:var(--green-2);font-weight:600;text-decoration:none">How this was built &rarr;</a></p>
+  </div>`;
+}
+
+function rowHTML(r, q){
+  const p = r.ref;
+  if(r.kind === 'person'){
+    const acts = [];
+    if(p.tel) acts.push(actLink('tel:'+p.tel, ICON.phone, p.p, 'solid'));
+    else if(p.dtel) acts.push(actLink('tel:'+p.dtel, ICON.phone, p.dp, ''));
+    return `<button class="row" data-id="${esc(r.id)}">
+      <span class="kind">${p.v?'Vacant':'Official'}</span>
+      <div class="nm">${p.n ? mark(p.n,q) : '<span style="color:var(--ink-3)">Vacant post</span>'}</div>
+      <div class="ti">${mark(p.t,q)}</div>
+      <div class="ag">${mark(p.a,q)}</div>
+      ${p.d.length? `<div class="meta">${esc(p.d.join(' › '))}</div>`:''}
+      ${acts.length? `<div class="acts">${acts.join('')}</div>`:''}
+    </button>`;
+  }
+  if(r.kind === 'agency'){
+    return `<button class="row" data-id="${esc(r.id)}">
+      <span class="kind">Agency</span>
+      <div class="nm">${mark(p.name,q)}</div>
+      <div class="ti">${p.acronym? esc(p.acronym)+' · ':''}${p.n} listings${p.vacant? ' · '+p.vacant+' vacant':''}</div>
+      ${p.phone? `<div class="acts">${actLink('tel:'+p.tel, ICON.phone, p.phone, 'solid')}</div>`:''}
+    </button>`;
+  }
+  if(r.kind === 'press'){
+    const c = p.c;
+    return `<button class="row" data-id="${esc(r.id)}">
+      <span class="kind">Press</span>
+      <div class="nm">${mark(c.n || p.o.office, q)}</div>
+      <div class="ti">${c.t? mark(c.t,q)+' · ':''}${esc(p.o.office)}</div>
+      <div class="acts">
+        ${actLink('mailto:'+c.e, ICON.mail, 'Email', 'solid')}
+        ${c.tel? actLink('tel:'+c.tel, ICON.phone, c.p, ''):''}
+      </div>
+    </button>`;
+  }
+  return `<button class="row" data-id="${esc(r.id)}">
+    <span class="kind">Address</span>
+    <div class="nm">${mark(p.addr,q)}</div>
+    <div class="ti">${esc([p.city,p.state,p.zip].filter(Boolean).join(' '))}</div>
+    <div class="meta">${p.n} listings · ${p.ags.length} ${p.ags.length===1?'agency':'agencies'}</div>
+  </button>`;
+}
+
+function actLink(href, icon, label, cls){
+  const ext = href.startsWith('http');
+  return `<a class="act ${cls}" href="${esc(href)}"${ext?' target="_blank" rel="noopener"':''}
+    onclick="event.stopPropagation()">${icon}<span>${esc(label)}</span></a>`;
+}
+
+const PAGE = 60;
+function renderResults(reset){
+  const q = CURQ;
+  if(!q.trim()){ renderIntro(); return; }
+  const res = search(q);
+  if(reset) SHOWN = PAGE;
+  const slice = res.slice(0, SHOWN);
+  const pane = $('#pane-find');
+  if(!res.length){
+    pane.innerHTML = `<div class="empty">Nothing matches &ldquo;${esc(q)}&rdquo;.<br>
+      <span style="font-size:13px">Try a surname, an agency, or the first digits of a phone number.</span></div>`;
+    return;
+  }
+  pane.innerHTML =
+    `<div class="hint">${res.length.toLocaleString()} ${res.length===1?'result':'results'}</div>`
+    + `<div class="rows">${slice.map(r => rowHTML(r,q)).join('')}</div>`
+    + (res.length > SHOWN
+        ? `<button class="more" id="more">Show ${Math.min(PAGE, res.length-SHOWN)} more</button>` : '');
+  const m = $('#more');
+  if(m) m.onclick = () => { SHOWN += PAGE; renderResults(false); };
+}
+
+// ---------------------------------------------------------------- detail
+function openSheet(html){
+  $('#sheet-body').innerHTML = html;
+  $('#sheet').classList.add('on');
+  $('#scrim').classList.add('on');
+  $('#sheet').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+function closeSheet(){
+  $('#sheet').classList.remove('on');
+  $('#scrim').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+function agencyOf(name){ return D.agencies.find(a => a.name === name); }
+
+function personSheet(p){
+  const a = agencyOf(p.a) || {};
+  const b = D.buildings.find(x => x.k === p.ak);
+  const acts = [];
+  if(p.tel) acts.push(actLink('tel:'+p.tel, ICON.phone, 'Call '+p.p, 'solid'));
+  if(!p.tel && p.dtel) acts.push(actLink('tel:'+p.dtel, ICON.phone, 'Call '+p.dp, 'solid'));
+  if(a.press && a.press.length)
+    acts.push(actLink('mailto:'+a.press[0].e, ICON.mail, 'Email press office', p.tel?'':'solid'));
+  if(a.website) acts.push(actLink(a.website, ICON.link, 'Agency site', 'ghost'));
+
+  const rows = [];
+  if(p.p)  rows.push(dl('Direct', `<a href="tel:${esc(p.tel)}" class="mono">${esc(p.p)}</a>`));
+  if(p.p2) rows.push(dl('Also', `<a href="tel:${esc(p.tel2)}" class="mono">${esc(p.p2)}</a>`));
+  if(p.dp) rows.push(dl('Division', `<a href="tel:${esc(p.dtel)}" class="mono">${esc(p.dp)}</a>`));
+  if(a.phone) rows.push(dl('Agency', `<a href="tel:${esc(a.tel)}" class="mono">${esc(a.phone)}</a>`));
+  if(p.fx) rows.push(dl('Fax', `<span class="mono">${esc(p.fx)}</span>`));
+  if(b) rows.push(dl('Office', esc([b.addr, b.city, b.state, b.zip].filter(Boolean).join(', '))
+      + `<br><button class="act ghost" style="margin-top:6px" data-goto="b${esc(b.k)}">Who else is here</button>`));
+  if(a.press && a.press.length) rows.push(dl('Press', a.press.map(c =>
+      `<a href="mailto:${esc(c.e)}">${esc(c.e)}</a>` +
+      (c.n? ` <span style="color:var(--ink-3)">&mdash; ${esc(c.n)}</span>`:'')).join('<br>')));
+  if(a.website) rows.push(dl('Website', `<a href="${esc(a.website)}" target="_blank" rel="noopener">${esc(a.website.replace(/^https?:\/\//,''))}</a>`));
+  rows.push(dl('Source', `Green Book, updated ${new Date(D.sources.greenbook.updated).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`));
+
+  return `
+    <div class="d-name">${p.n ? esc(p.n) : 'Vacant post'}${p.v?'<span class="vac">Vacant</span>':''}</div>
+    <div class="d-title">${esc(p.t)}</div>
+    <button class="d-agency" data-goto="a${esc(p.a)}" style="text-align:left">${esc(p.a)} &rarr;</button>
+    ${p.d.length? `<div class="d-path">${p.d.map((x,i)=> (i? ' › ':'') + '<b>'+esc(x)+'</b>').join('')}</div>`:''}
+    ${acts.length? `<div class="bigacts">${acts.join('')}</div>`:''}
+    <dl class="dl">${rows.join('')}</dl>`;
+}
+
+function dl(k, v){
+  return `<div class="dl-row"><dt>${esc(k)}</dt><dd>${v}</dd></div>`;
+}
+
+function treeHTML(nodes, agency, depth){
+  if(!nodes || !nodes.length) return '';
+  return '<ul' + (depth?'':' class="tree"') + '>' + nodes.map(n => `
+    <li>
+      <button class="tnode" data-div="${esc(agency)}|${esc(n.name)}">
+        <span class="tw">${n.c && n.c.length? '▸':'·'}</span>
+        <span class="tn">${esc(n.name)}</span>
+        <span class="tc">${n.n}</span>
+      </button>
+      ${treeHTML(n.c, agency, depth+1)}
+    </li>`).join('') + '</ul>';
+}
+
+function agencySheet(a){
+  const head = D.heads.find(h => h.agency === a.name);
+  const acts = [];
+  if(a.phone) acts.push(actLink('tel:'+a.tel, ICON.phone, 'Call '+a.phone, 'solid'));
+  if(a.press && a.press.length)
+    acts.push(actLink('mailto:'+a.press[0].e, ICON.mail, 'Email press office', a.phone?'':'solid'));
+  if(a.website) acts.push(actLink(a.website, ICON.link, 'Website', 'ghost'));
+
+  const org = a.org ? D.orgs.find(o => o.id === a.org) : null;
+  const rows = [];
+  if(a.acronym) rows.push(dl('Acronym', `<span class="mono">${esc(a.acronym)}</span>`));
+  rows.push(dl('Listings', a.n + (a.vacant? ` · ${a.vacant} vacant`:'')));
+  rows.push(dl('Branch', esc(a.section)));
+  if(org && org.type) rows.push(dl('Type', esc(org.type)));
+  if(org && org.parents && org.parents.length)
+    rows.push(dl('Reports to', org.parents.map(x => esc(x.label)).join('<br>')));
+  if(a.press && a.press.length) rows.push(dl('Press', a.press.map(c =>
+      `<a href="mailto:${esc(c.e)}">${esc(c.e)}</a>` +
+      (c.n? ` <span style="color:var(--ink-3)">&mdash; ${esc(c.n)}${c.t? ', '+esc(c.t):''}</span>`:'') +
+      (c.p? `<br><a href="tel:${esc(c.tel)}" class="mono" style="font-size:13px">${esc(c.p)}</a>`:'')
+    ).join('<hr style="border:none;border-top:1px solid var(--rule-2);margin:7px 0">')));
+  if(org && org.officer_url)
+    rows.push(dl('Contact', `<a href="${esc(org.officer_url)}" target="_blank" rel="noopener">Official contact page</a>`));
+  if(a.website) rows.push(dl('Website', `<a href="${esc(a.website)}" target="_blank" rel="noopener">${esc(a.website.replace(/^https?:\/\//,''))}</a>`));
+
+  const staff = D.people.filter(p => p.a === a.name);
+  const top = staff.filter(p => !p.d.length);
+
+  return `
+    <div class="d-name">${esc(a.name)}</div>
+    ${a.acronym? `<div class="d-title mono">${esc(a.acronym)}</div>`:''}
+    ${acts.length? `<div class="bigacts">${acts.join('')}</div>`:''}
+    ${head && head.gb ? `<dl class="dl" style="margin-top:14px">${dl('Led by',
+        `<b style="font-size:16px">${esc(head.gb.n)}</b><br><span style="color:var(--ink-2)">${esc(head.gb.t)}</span>`
+        + (head.status==='differs' ? `<br><span class="chip differs" style="margin-top:6px">Sources disagree</span>
+             <div style="font-size:12.5px;color:var(--ink-3);margin-top:4px">The city's governance dataset lists
+             ${esc(head.gov.n)} in this post.</div>` : ''))}</dl>`:''}
+    <dl class="dl">${rows.join('')}</dl>
+    ${top.length? `<div class="sec">Top of the agency</div>
+      <div class="rows">${top.slice(0,14).map(p => `
+        <button class="row" data-id="p${p.i}" style="padding-left:0;padding-right:0">
+          <div class="nm">${p.n? esc(p.n):'<span style="color:var(--ink-3)">Vacant</span>'}</div>
+          <div class="ti">${esc(p.t)}</div>
+          ${p.p? `<div class="acts">${actLink('tel:'+p.tel, ICON.phone, p.p,'')}</div>`:''}
+        </button>`).join('')}</div>`:''}
+    ${a.tree.length? `<div class="sec">Divisions</div>${treeHTML(a.tree, a.name, 0)}`:''}
+    <div style="padding:16px 0 4px">
+      <button class="act" data-all="${esc(a.name)}">See all ${a.n} listings</button>
+    </div>`;
+}
+
+function addressSheet(b){
+  const staff = D.people.filter(p => p.ak === b.k);
+  const q = encodeURIComponent([b.addr,b.city,b.state,b.zip].filter(Boolean).join(', '));
+  return `
+    <div class="d-name">${esc(b.addr)}</div>
+    <div class="d-title">${esc([b.city,b.state,b.zip].filter(Boolean).join(' '))}</div>
+    <div class="bigacts">
+      ${actLink('https://maps.google.com/?q='+q, ICON.map, 'Directions', 'solid')}
+    </div>
+    <dl class="dl">
+      ${dl('Listings', b.n)}
+      ${dl('Agencies', b.ags.length)}
+    </dl>
+    <div class="sec">Who is here</div>
+    <div class="rows">${b.ags.map(g => `
+      <button class="row" data-id="a${esc(g.name)}" style="padding-left:0;padding-right:0">
+        <div class="nm" style="font-size:15px">${esc(g.name)}</div>
+        <div class="ti">${g.n} ${g.n===1?'listing':'listings'}</div>
+      </button>`).join('')}</div>`;
+}
+
+function pressSheet(o, c){
+  const rows = [];
+  if(c.t) rows.push(dl('Title', esc(c.t)));
+  rows.push(dl('Email', `<a href="mailto:${esc(c.e)}">${esc(c.e)}</a>`));
+  if(c.p) rows.push(dl('Phone', `<a href="tel:${esc(c.tel)}" class="mono">${esc(c.p)}</a>`));
+  rows.push(dl('Office', esc(o.office) + ' press office'));
+  rows.push(dl('Source', 'nyc.gov agency press contacts'));
+  return `
+    <div class="d-name">${esc(c.n || o.office + ' press office')}</div>
+    <div class="d-title">${esc(o.office)} press office</div>
+    <div class="bigacts">
+      ${actLink('mailto:'+c.e, ICON.mail, 'Email', 'solid')}
+      ${c.tel? actLink('tel:'+c.tel, ICON.phone, 'Call '+c.p, ''):''}
+    </div>
+    <dl class="dl">${rows.join('')}</dl>`;
+}
+
+function openById(id){
+  if(id[0]==='p'){
+    const p = D.people.find(x => 'p'+x.i === id);
+    if(p) openSheet(personSheet(p));
+  } else if(id[0]==='a'){
+    const a = agencyOf(id.slice(1));
+    if(a) openSheet(agencySheet(a));
+  } else if(id[0]==='b'){
+    const b = D.buildings.find(x => 'b'+x.k === id);
+    if(b) openSheet(addressSheet(b));
+  } else if(id[0]==='r'){
+    const r = IDX.find(x => x.id === id);
+    if(r) openSheet(pressSheet(r.ref.o, r.ref.c));
+  }
+}
+
+// ---------------------------------------------------------------- panes
+function renderAgencies(){
+  const secs = {};
+  D.agencies.forEach(a => (secs[a.section] = secs[a.section] || []).push(a));
+  const order = ['City','County','Courts'];
+  $('#pane-agencies').innerHTML = order.filter(s => secs[s]).map(s => `
+    <div class="sec">${esc(s)} <span class="mono" style="font-size:10px">${secs[s].length}</span></div>
+    <div class="rows">${secs[s]
+      .slice().sort((x,y) => y.n - x.n)
+      .map(a => `<button class="row" data-id="a${esc(a.name)}">
+        <div class="nm">${esc(a.name)}</div>
+        <div class="ti">${a.acronym? esc(a.acronym)+' · ':''}${a.n} listings${a.vacant? ' · '+a.vacant+' vacant':''}${a.press.length? ' · press office':''}</div>
+        <div class="acts">
+          ${a.phone? actLink('tel:'+a.tel, ICON.phone, a.phone, 'solid'):''}
+          ${a.press.length? actLink('mailto:'+a.press[0].e, ICON.mail, 'Email', ''):''}
+        </div>
+      </button>`).join('')}</div>`).join('');
+}
+
+function renderHeads(){
+  const H = D.heads;
+  const differs = H.filter(h => h.status === 'differs');
+  const rest = H.filter(h => h.status !== 'differs');
+  const box = (src, o) => `<div class="hbox">
+      <div class="hsrc">${esc(src)}</div>
+      ${o ? `<div class="hn">${esc(o.n)}</div><div class="ht">${esc(o.t||'')}</div>`
+          : `<div class="none">No head listed</div>`}
+    </div>`;
+  const card = h => `<div class="headcard">
+      <button class="hag" data-id="a${esc(h.agency)}" style="text-align:left;width:100%">${esc(h.agency)} &rarr;</button>
+      <div style="margin-top:5px">
+        <span class="chip ${h.status==='differs'?'differs':h.status==='agree'?'agree':'one'}">
+          ${h.status==='differs'?'Sources disagree':h.status==='agree'?'Sources agree':
+            h.status==='variant'?'Name variant':h.status==='greenbook_only'?'Green Book only':
+            h.status==='governance_only'?'Governance data only':'Neither names a head'}</span>
+      </div>
+      <div class="hgrid">
+        ${box('Green Book', h.gb)}
+        ${box('Governance dataset', h.gov)}
+      </div>
+      ${h.gb && h.gb.p ? `<div class="acts">${actLink('tel:'+h.gb.tel, ICON.phone, h.gb.p, '')}</div>`:''}
+    </div>`;
+  $('#pane-heads').innerHTML = `
+    <div class="intro" style="padding-bottom:2px">
+      <p class="lede">Two official sources name the people who run New York's agencies.
+      They do not always name the same person.</p>
+      <p>The Green Book is the city's directory of record. The Office of Data Analytics
+      keeps a separate inventory of governance organizations that also names a principal
+      officer. Where they disagree, one of them is out of date &mdash; and it is worth
+      knowing which agencies those are before you pick up the phone.</p>
+    </div>
+    <div class="sec">Sources disagree <span class="mono" style="font-size:10px">${differs.length}</span></div>
+    ${differs.map(card).join('')}
+    <div class="sec">Everything else <span class="mono" style="font-size:10px">${rest.length}</span></div>
+    ${rest.map(card).join('')}`;
+}
+
+function renderPress(){
+  $('#pane-press').innerHTML = `
+    <div class="intro" style="padding-bottom:2px">
+      <p class="lede">Neither open dataset publishes a single email address.
+      This page does, because the city publishes these itself.</p>
+      <p>Every address below was read from NYC.gov's own agency press-contacts
+      page. None was inferred from a name pattern. These are press and media
+      offices &mdash; the right door for a reporter, the wrong one for a
+      complaint about a pothole.</p>
+    </div>
+    ${D.press.map(o => `
+      <div class="sec">${esc(o.office)}</div>
+      <div class="rows">${o.contacts.map((c,i) => `
+        <button class="row" data-id="r${esc(o.office)}${i}">
+          <div class="nm">${esc(c.n || 'General inquiries')}</div>
+          ${c.t? `<div class="ti">${esc(c.t)}</div>`:''}
+          <div class="meta mono" style="font-size:12px">${esc(c.e)}</div>
+          <div class="acts">
+            ${actLink('mailto:'+c.e, ICON.mail, 'Email', 'solid')}
+            ${c.tel? actLink('tel:'+c.tel, ICON.phone, c.p, ''):''}
+          </div>
+        </button>`).join('')}</div>`).join('')}`;
+}
+
+function renderVacant(){
+  const v = D.people.filter(p => p.v);
+  const byAg = {};
+  v.forEach(p => (byAg[p.a] = byAg[p.a] || []).push(p));
+  const ags = Object.keys(byAg).sort((a,b) => byAg[b].length - byAg[a].length);
+  $('#pane-vacant').innerHTML = `
+    <div class="intro" style="padding-bottom:2px">
+      <p class="lede">${v.length} posts in the Green Book are listed with no one in them.</p>
+      <p>The city keeps the desk, the title and often the phone line in its directory
+      and marks the occupant vacant. Read together, they are a map of where
+      New York's government is currently short-handed.</p>
+    </div>
+    ${ags.map(a => `
+      <div class="sec">${esc(a)} <span class="mono" style="font-size:10px">${byAg[a].length}</span></div>
+      <div class="rows">${byAg[a].map(p => `
+        <button class="row" data-id="p${p.i}">
+          <div class="nm" style="font-size:15px">${esc(p.t)}</div>
+          ${p.d.length? `<div class="meta">${esc(p.d.join(' › '))}</div>`:''}
+          ${p.p? `<div class="acts">${actLink('tel:'+p.tel, ICON.phone, p.p, '')}</div>`:''}
+        </button>`).join('')}</div>`).join('')}`;
+}
+
+function renderAddresses(){
+  $('#pane-addresses').innerHTML = `
+    <div class="intro" style="padding-bottom:2px">
+      <p class="lede">${D.buildings.length} addresses hold ${D.stats.people.toLocaleString()} listings.</p>
+      <p>City government is far more concentrated than its org chart suggests.
+      Tap an address to see every agency that answers there.</p>
+    </div>
+    <div class="rows">${D.buildings.filter(b => b.n > 0).map(b => `
+      <button class="row" data-id="b${esc(b.k)}">
+        <div class="nm">${esc(b.addr)}</div>
+        <div class="ti">${esc([b.city,b.state,b.zip].filter(Boolean).join(' '))}</div>
+        <div class="meta">${b.n} ${b.n===1?'listing':'listings'} · ${b.ags.slice(0,3).map(g=>esc(g.name)).join(', ')}${b.ags.length>3? ' and '+(b.ags.length-3)+' more':''}</div>
+      </button>`).join('')}</div>`;
+}
+
+function renderAbout(){
+  const s = D.stats, src = D.sources;
+  const d = x => new Date(x).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  $('#pane-about').innerHTML = `
+    <div class="intro">
+      <p class="lede">This is the City of New York's own directory, rebuilt as
+      something you can actually search.</p>
+      <p>The official Green Book Online makes you choose a category, then a
+      subcategory, then wait for a page to reload. It has no export, no way to
+      call a number from a phone, and no way to link to anything. The data
+      underneath it is good. The way you reach it is not.</p>
+
+      <div class="sec">Where the data comes from</div>
+      <p><b>Greenbook</b> (<span class="mono">mdcw-n682</span>), published by the
+      Department of Citywide Administrative Services &mdash; ${src.greenbook.rows.toLocaleString()}
+      listings, last updated by the city on ${d(src.greenbook.updated)}. This is
+      the people layer: name, title, division, address, direct phone.</p>
+      <p><b>NYC Agencies and Governance Organizations</b>
+      (<span class="mono">t3jq-9nkf</span>), published by the Office of Technology
+      and Innovation &mdash; ${src.agencies.rows} organizations, last updated
+      ${d(src.agencies.updated)}. This is the structure layer: organization type,
+      principal officer, and who reports to whom.</p>
+      <p><b>Agency press contacts</b>, published on NYC.gov &mdash;
+      ${s.press_emails} named press officers across ${D.press.length} offices.
+      Neither open dataset contains an email address; this page is the city's
+      published source for them.</p>
+
+      <div class="sec">What was done to it</div>
+      <p>Everything is fetched fresh on each build and fails loudly rather than
+      quietly shipping a short read. Names, phone numbers and web addresses are
+      normalized. The four columns the Green Book uses to store a division
+      hierarchy are turned back into a tree. Phone numbers become tap-to-call
+      links, including vanity numbers like (212) NEW-YORK.</p>
+      <p>Nothing is invented. No email address was ever inferred from a name
+      pattern &mdash; every one was read from the city's published page. Where a
+      post is empty, it is shown as vacant rather than hidden.</p>
+
+      <div class="sec">The one claim this site makes on its own</div>
+      <p>Both datasets name agency heads, and ${D.heads.filter(h=>h.status==='differs').length}
+      agencies get a different answer depending on which you read. Working out
+      which of those are real disagreements rather than spelling differences is
+      the only judgement call here. Surnames are compared after stripping
+      credentials and honorifics, so &ldquo;Alister F. Martin MD, MPP&rdquo; and
+      &ldquo;Alister Martin&rdquo; are one person; nicknames like Sam for Samuel
+      are tolerated. A title only counts as an agency head if it is the whole
+      title &mdash; Chief of Staff and Deputy Commissioner never qualify.</p>
+      <p>It is worth being blunt about what a disagreement does and does not mean:
+      it tells you the two files differ, not which one is right. Check before you
+      rely on either.</p>
+
+      <div class="sec">Take it with you</div>
+      <p><a href="data/greenbook.csv" download>Download the full directory as CSV</a>
+      &mdash; every listing, with title, agency, division path, phones and address.
+      <a href="data/greenbook.json">The JSON</a> behind this page is there too.
+      The city offers no export of its own.</p>
+
+      <div class="sec">Built</div>
+      <p class="mono" style="font-size:12.5px">${d(D.built)} ·
+      ${s.people.toLocaleString()} listings · ${s.agencies} agencies ·
+      ${s.buildings} addresses · ${s.phones.toLocaleString()} phone numbers</p>
+
+      <p style="margin-top:18px"><a href="https://github.com/joshgreenman1973/nyc-green-book" target="_blank" rel="noopener">Source code and methodology on GitHub &rarr;</a></p>
+    </div>
+    <footer>
+      Not affiliated with the City of New York. Built from NYC Open Data and NYC.gov.
+      The official directory is at
+      <a href="https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Online" target="_blank" rel="noopener">a856-gbol.nyc.gov</a>.
+      <br>
+      <button class="aibtn" id="aibtn">AI caution</button>
+      <div id="aipop">
+        <b>This directory was assembled with AI assistance.</b>
+        The listings themselves are the city's published records, passed through
+        without rewriting. But the code that fetched, matched and compared them was
+        written with a language model, and the agency-head comparison is a computed
+        judgement, not an official finding. Verify anything you intend to act on
+        against the source, and treat a flagged disagreement as a prompt to check
+        rather than a fact.
+      </div>
+    </footer>`;
+  $('#aibtn').onclick = () => $('#aipop').classList.toggle('on');
+}
+
+// ---------------------------------------------------------------- routing
+const RENDERED = {};
+function showTab(name){
+  closeSheet();
+  document.querySelectorAll('nav.tabs button').forEach(b =>
+    b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+  document.querySelectorAll('.pane').forEach(p =>
+    p.classList.toggle('on', p.id === 'pane-'+name));
+  if(!RENDERED[name]){
+    ({agencies:renderAgencies, heads:renderHeads, press:renderPress,
+      vacant:renderVacant, addresses:renderAddresses, about:renderAbout}[name]||function(){})();
+    RENDERED[name] = true;
+  }
+  if(location.hash.slice(2) !== name) history.replaceState(null,'','#/'+name);
+  window.scrollTo(0,0);
+}
+function route(){
+  const h = location.hash.slice(2);
+  showTab(['agencies','heads','press','vacant','addresses','about'].includes(h) ? h : 'find');
+}
+
+// ---------------------------------------------------------------- events
+function wire(){
+  const q = $('#q');
+  let t;
+  q.addEventListener('input', () => {
+    CURQ = q.value;
+    $('#clear').classList.toggle('on', !!CURQ);
+    clearTimeout(t);
+    t = setTimeout(() => {
+      if(CURQ.trim()) showTab('find');
+      renderResults(true);
+    }, 90);
+  });
+  q.addEventListener('keydown', e => {
+    if(e.key === 'Escape'){ q.value=''; CURQ=''; $('#clear').classList.remove('on'); renderResults(true); q.blur(); }
+    if(e.key === 'Enter'){
+      q.blur();
+      const first = document.querySelector('#pane-find .row');
+      if(first) first.click();
+    }
+  });
+  $('#clear').onclick = () => {
+    q.value=''; CURQ=''; $('#clear').classList.remove('on');
+    renderResults(true); q.focus();
+  };
+
+  document.querySelectorAll('nav.tabs button').forEach(b =>
+    b.onclick = () => showTab(b.dataset.tab));
+
+  document.addEventListener('click', e => {
+    const tl = e.target.closest('[data-tab-link]');
+    if(tl){ e.preventDefault(); showTab(tl.dataset.tabLink); return; }
+
+    const goto = e.target.closest('[data-goto]');
+    if(goto){ openById(goto.dataset.goto); return; }
+
+    const all = e.target.closest('[data-all]');
+    if(all){
+      closeSheet();
+      q.value = all.dataset.all; CURQ = q.value;
+      $('#clear').classList.add('on');
+      showTab('find'); renderResults(true);
+      return;
+    }
+
+    const dv = e.target.closest('[data-div]');
+    if(dv){
+      const [ag, div] = dv.dataset.div.split('|');
+      closeSheet();
+      q.value = div; CURQ = q.value;
+      $('#clear').classList.add('on');
+      showTab('find'); renderResults(true);
+      return;
+    }
+
+    const row = e.target.closest('.row, .hag');
+    if(row && row.dataset.id){ openById(row.dataset.id); }
+  });
+
+  $('#close').onclick = closeSheet;
+  $('#scrim').onclick = closeSheet;
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') closeSheet();
+    if(e.key === '/' && document.activeElement !== q){ e.preventDefault(); q.focus(); }
+  });
+  window.addEventListener('hashchange', route);
+
+  // Swipe the sheet away on touch.
+  let y0 = null;
+  const sheet = $('#sheet');
+  sheet.addEventListener('touchstart', e => {
+    y0 = sheet.scrollTop <= 0 ? e.touches[0].clientY : null;
+  }, {passive:true});
+  sheet.addEventListener('touchmove', e => {
+    if(y0 === null) return;
+    const dy = e.touches[0].clientY - y0;
+    if(dy > 0) sheet.style.transform = 'translateY('+dy+'px)';
+  }, {passive:true});
+  sheet.addEventListener('touchend', e => {
+    if(y0 === null) return;
+    const dy = e.changedTouches[0].clientY - y0;
+    sheet.style.transform = '';
+    if(dy > 90) closeSheet();
+    y0 = null;
+  });
+}
+</script>
+</body>
+</html>
