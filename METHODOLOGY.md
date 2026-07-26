@@ -1,6 +1,11 @@
-# Methodology
+# Methodology — The Greener Book
 
 How this directory is assembled, what it claims, and where it can be wrong.
+
+The name is a joke with a point: this is not the city's Green Book but a rebuild
+of it, and the thing that makes it greener is a fourth source — the City Record's
+published personnel actions — which dates every appointment and departure and so
+catches the official directory when it goes stale.
 
 Everything below is reproducible: `python3 scripts/build.py` fetches all three
 sources live and rewrites `docs/data/`. Nothing is hand-edited, and no data file

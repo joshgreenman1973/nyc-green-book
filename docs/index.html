@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>The Green Book — who runs New York City</title>
-<meta name="description" content="The City of New York's official directory, rebuilt: 2,609 officials, 124 agencies, every phone number one tap away.">
+<title>The Greener Book — who runs New York City</title>
+<meta name="description" content="The City of New York's official directory, rebuilt and kept current: 2,609 officials, 124 agencies, every phone number one tap away.">
 <meta name="theme-color" content="#0E3A26">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -304,7 +304,7 @@ footer a{color:var(--green-2);text-decoration:none;font-weight:600}
 
 <header>
   <div class="mast">
-    <h1>The Green Book</h1>
+    <h1>The Greener Book</h1>
     <span class="sub" id="masthead-sub">Who runs New York City</span>
   </div>
   <div class="searchwrap"><div class="inner">
@@ -495,8 +495,9 @@ function renderIntro(){
   const gb = new Date(D.sources.greenbook.updated).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
   $('#pane-find').innerHTML = `
   <div class="intro">
-    <p class="lede">The city's own directory, rebuilt. Every official the City of New York
-    publishes, searchable in one box, with every phone number one tap from a call.</p>
+    <p class="lede">The city's own directory, rebuilt and kept fresher. Every official
+    the City of New York publishes, searchable in one box, with every phone number one
+    tap from a call.</p>
     <p>Start typing a name, a job title or an agency. Nothing here is guessed at
     &mdash; it is the city's published record, reorganized. If a city number
     called you and you want to know who it was, paste that in too.</p>
@@ -972,6 +973,12 @@ function renderAbout(){
       subcategory, then wait for a page to reload. It has no export, no way to
       call a number from a phone, and no way to link to anything. The data
       underneath it is good. The way you reach it is not.</p>
+      <p><b>Hence the name.</b> This is not the Green Book &mdash; that is the
+      city's, and it is linked at the bottom of this page. This is the same public
+      record with a fourth source layered on top: the City Record's published
+      personnel actions, which date every appointment and departure. That is what
+      lets this version notice when the official directory has gone stale, and why
+      it is a shade greener.</p>
 
       <div class="sec">Where the data comes from</div>
       <p><b>Greenbook</b> (<span class="mono">mdcw-n682</span>), published by the

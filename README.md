@@ -1,7 +1,13 @@
-# The Green Book
+# The Greener Book
 
 The City of New York's official directory, rebuilt as something you can actually
-search.
+search — and kept fresher than the original.
+
+Not to be confused with the city's own Green Book, which is
+[here](https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Online). This is the same
+public record with a fourth source layered on top — the City Record's published
+personnel actions — which is what lets it notice when the official directory has
+gone stale.
 
 **Live: https://joshgreenman1973.github.io/nyc-green-book/**
 
