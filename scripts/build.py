@@ -22,6 +22,7 @@ thinner file over a good one.
 """
 
 import csv
+import hashlib
 import json
 import os
 import re
@@ -70,7 +71,12 @@ def fetch_dataset(dataset_id, minimum):
     rows, offset, limit = [], 0, 50000
     while True:
         url = f"{DOMAIN}/resource/{dataset_id}.json"
-        params = {"$limit": limit, "$offset": offset}
+        # Socrata does NOT guarantee row order without an explicit $order, so a
+        # bare fetch returns the same rows shuffled each time. Ordering by the
+        # internal row id (:id) makes every fetch byte-stable, which is what
+        # lets the build commit only when the data has actually changed rather
+        # than when the city's server felt like reordering its response.
+        params = {"$limit": limit, "$offset": offset, "$order": ":id"}
         token = os.environ.get("SOCRATA_APP_TOKEN")
         headers = {"X-App-Token": token} if token else {}
         r = SESSION.get(url, params=params, headers=headers, timeout=120)
@@ -793,6 +799,34 @@ def main():
             for name, contacts in sorted(press.items())
         ],
     }
+    # Commit only on real change. The build reruns whenever the city advances a
+    # dataset's timestamp, but the city restamps its feeds far more often than
+    # the contents actually move. So the payload is signed over everything that
+    # a reader would care about — every person, agency, head and press office —
+    # while excluding the two fields that change on every run regardless: the
+    # build time and the source stamps. If that signature matches what is
+    # already on disk, nothing is rewritten and git sees no diff. A name change
+    # then stands out as the only kind of commit this repo makes.
+    def signature(obj):
+        content = {k: v for k, v in obj.items() if k not in ("built", "sources")}
+        blob = json.dumps(content, separators=(",", ":"), sort_keys=True)
+        return hashlib.sha256(blob.encode()).hexdigest()
+
+    new_sig = signature(payload)
+    existing = OUT / "greenbook.json"
+    if existing.exists():
+        try:
+            old = json.loads(existing.read_text())
+            if signature(old) == new_sig:
+                log("")
+                log("Content unchanged since "
+                    f"{old.get('built', '(unknown)')}; leaving all files as-is.")
+                log(f"  (city restamped its feeds, but no person, agency, head "
+                    f"or press office moved)")
+                return
+        except (ValueError, KeyError):
+            pass  # unreadable or old-format file — fall through and rewrite
+
     (OUT / "greenbook.json").write_text(json.dumps(payload, separators=(",", ":")))
 
     # A flat CSV, because a directory you cannot take away with you is a
