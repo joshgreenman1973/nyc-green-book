@@ -13,6 +13,7 @@ is committed that the script cannot regenerate.
 | [Greenbook](https://data.cityofnewyork.us/City-Government/Greenbook/mdcw-n682) (`mdcw-n682`) | Dept. of Citywide Administrative Services | People: name, title, division, address, direct phone | 2,609 |
 | [NYC Agencies and Governance Organizations](https://data.cityofnewyork.us/dataset/t3jq-9nkf) (`t3jq-9nkf`) | Office of Technology and Innovation | Structure: organization type, principal officer, `reports_to` | 306 |
 | [Agency press contacts](https://www.nyc.gov/main/agency-press-contacts) | NYC.gov | Named press officers with email addresses | 82 people / 60 offices |
+| [City Record — Changes in Personnel](https://data.cityofnewyork.us/City-Government/City-Record-Online/dg92-zbpx) (`dg92-zbpx`) | DCAS / City Record | Appointments, departures, effective dates, salary | ~89,000 since 2025 |
 
 The two Open Data feeds are complementary and neither is sufficient alone. The
 Greenbook knows who sits where and on what phone number but nothing about how
@@ -92,24 +93,33 @@ asserts a genuine disagreement:
 
 ### Which name gets shown
 
-For the 16 `differs` agencies the directory has to display one name, and it
-shows the **governance dataset's** in every case. That file is maintained
-continuously — the Office of Technology and Innovation takes corrections through
-a public form — while the Green Book lags on political appointees. All 16
-listings are rewritten this way.
+Neither directory carries a date, so nothing inside either one can settle a
+disagreement. **The City Record can, and where it has published something it
+decides.** It is the city's legally required record of personnel actions and it
+gives every appointment an effective date.
 
-**No exceptions, and here is one that was tried and removed.** An earlier version
-treated a Green Book `Acting` or `Interim` title as proof the Green Book was the
-newer source and let it override governance. That reasoning is wrong: an acting
-official can be a holdover from the *previous* administration whom the governance
-file has already replaced with a permanent appointee. The flag tells you the post
-is unsettled; it tells you nothing about which of the two files recorded the most
-recent change. So it is not used, and the rule stays simple — governance wins
-every disagreement.
+The rule, applied to each disputed agency:
 
-**This is a best guess, not a verdict.** It picks the likelier of two official
-answers. Neither file is guaranteed current during a transition, and confirming
-who holds a given post means checking a primary source.
+1. If one candidate has a published appointment **to that agency** and the other
+   does not, the appointed one holds the post.
+2. If one candidate has a published **departure** from it, the other holds it.
+3. If both were appointed there, the **later** appointment wins.
+4. If the record says nothing, fall back to the governance name as the likelier
+   of the two — and label the conflict **unsettled** on the page.
+
+It settles 3 of 15, and it cuts both ways: it confirms governance at Cultural
+Affairs (Diya Vij appointed 03/15/2026) and **overrules** it at City Planning,
+where Sideya Sherman was appointed 03/15/2026 and the Green Book had it right
+all along.
+
+**Two earlier heuristics were tried and removed**, both wrong. Treating a Green
+Book `Acting`/`Interim` title as proof of freshness fails, because an acting
+official can be a holdover the governance file has already replaced. And assuming
+governance is always newer fails too — City Planning is the counter-example. The
+City Record replaced guessing with evidence.
+
+**Where it is silent, the site says so.** A fallback is shown as a best guess and
+labelled unsettled, never as a verdict.
 
 **Nothing is discarded.** Every rewritten listing keeps the superseded name, and
 both names stay searchable — searching "Cumbo" lands on the Cultural Affairs
@@ -165,6 +175,38 @@ organizational form (`department`, `administration`, `office`) are ignored;
 words that distinguish one body from another (`board`, `commission`,
 `authority`, `corporation`, `fund`, `museum`) never are. 39 of 124 agencies get
 a press office; the other 21 press offices remain searchable on their own.
+
+## Who has already left
+
+The City Record does more than break ties. Because it is the only source with a
+sense of time, it can be matched against the directory to find listings that have
+quietly gone stale: **42 people the Green Book still lists have already left the
+job it lists them in**, and 63 officials get a start date and a salary that
+neither directory carries.
+
+**Matching is deliberately strict, because the failure mode is severe.** Asserting
+that a sitting commissioner has quit when they have not is the worst error this
+project could make. Two real cases caught while building it, both of which
+name-only matching got wrong:
+
+- `LEE, RICHARD J` resigned from the **City Council**. The Green Book's Richard
+  Lee is the **Finance** commissioner. Different people.
+- `ANDERSON, GREGORY J` retired from the **Police Department** on a police title
+  code. The Green Book's Gregory P. Anderson runs **Sanitation**. Different
+  people.
+
+So a match requires the given name, the family name, a compatible middle initial
+**and** a corroborating agency. Anything less is left unreported.
+
+**A departure means "no longer at this agency", never "no longer employed".** A
+resignation dated the same day as an appointment somewhere else is one person
+moving desks — Howard Singer resigned from Correction and started at DCAS the
+same morning; Sadye Campoamor left the comptroller's office for the Department
+of Education on one date. 14 of the 42 are transfers like that, and the site
+names where they went.
+
+**It is a floor, not a count.** The personnel section runs roughly two to three
+months behind, so silence is never evidence that someone is still in post.
 
 ## The administration contact list
 

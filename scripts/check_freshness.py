@@ -49,6 +49,29 @@ def main():
         return 0
 
     moved = []
+
+    # The City Record as a whole updates daily with procurement notices, so its
+    # dataset-level stamp always moves and would force a rebuild every run.
+    # What matters here is only whether new *personnel* notices have been
+    # published, so ask for that section's newest publication date directly.
+    try:
+        r = requests.get(
+            f"{DOMAIN}/resource/dg92-zbpx.json",
+            params={"$select": "max(start_date) AS hi",
+                    "$where": "section_name='Changes in Personnel'"},
+            headers={"User-Agent": UA}, timeout=45)
+        r.raise_for_status()
+        # The API returns a full timestamp; the build stores a date. Compare
+        # on the date alone so a format difference is not read as a change.
+        hi = ((r.json() or [{}])[0].get("hi", "") or "")[:10]
+        was = (prev.get("city_record", {}).get("personnel_through", "") or "")[:10]
+        print(f"  dg92-zbpx personnel: city has {hi}, build has {was or '(none)'}")
+        if hi and hi != was:
+            moved.append(f"city record personnel {was or '(none)'} -> {hi}")
+    except Exception as e:
+        emit(True, f"Could not check the City Record ({e}); rebuilding to be safe.")
+        return 2
+
     for key, ds in DATASETS.items():
         try:
             r = requests.get(f"{DOMAIN}/api/views/{ds}.json",

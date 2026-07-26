@@ -141,6 +141,16 @@ def main():
             "name": p["n"],
             "title": p["t"],
             "email": "",                 # see the module docstring
+            # From the City Record, and blank unless it corroborated the person
+            # by name, middle initial and agency together.
+            "status": ("left this agency" if p.get("gone") else
+                       "in post" if p.get("cr") else ""),
+            "in_post_since": ((p.get("cr") or {}).get("effective", "")
+                              if not p.get("gone") else ""),
+            "left_on": ((p.get("cr") or {}).get("effective", "")
+                        if p.get("gone") else ""),
+            "moved_to": (p.get("cr") or {}).get("moved_to", ""),
+            "salary": (p.get("cr") or {}).get("salary", "") or "",
             "agency": p["a"],
             "acronym": a["acronym"],
             "org_type": o["type"] if o else "",
@@ -186,6 +196,9 @@ def main():
           f"tier 3: {by_tier.get(3,0)}); dropped {dupes} duplicate listings")
     print(f"  {withphone} with a direct phone "
           f"({round(100*withphone/len(rows))}%)")
+    dated = sum(1 for r in rows if r["in_post_since"])
+    left = sum(1 for r in rows if r["status"] == "left this agency")
+    print(f"  {dated} with a City Record start date; {left} already gone")
     print(f"  0 with an email — the city publishes none for these posts")
 
 

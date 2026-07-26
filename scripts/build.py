@@ -35,6 +35,9 @@ from pathlib import Path
 
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import city_record  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw"
 OUT = ROOT / "docs" / "data"
@@ -484,6 +487,16 @@ def main():
     press = fetch_press_contacts()
     (RAW / "press.json").write_text(json.dumps(press, indent=1))
 
+    log("Fetching City Record personnel actions...")
+    cr_rows = city_record.fetch(session=SESSION)
+    cr_through = city_record.latest_published(cr_rows)
+    # Newest *publication* date, which is what check_freshness.py compares
+    # against to decide whether new personnel notices have appeared.
+    cr_published = max((r["published"] for r in cr_rows if r["published"]),
+                       default="")
+    log(f"  {len(cr_rows)} actions, latest effective date {cr_through}, "
+        f"published through {cr_published}")
+
     # ---- addresses ----------------------------------------------------
     addr_index = {}
     for r in gb_rows:
@@ -735,34 +748,120 @@ def main():
             "status": status,
         })
     # ---- resolve the disagreements ----------------------------------------
-    # The governance inventory is maintained continuously — the Office of
-    # Technology and Innovation takes corrections through a public form — and is
-    # the better source on who currently holds a post; the Green Book lags on
-    # political appointees. So where the two name different people, the
-    # governance name is shown.
+    # Neither directory carries a date, so when they name different people
+    # there is nothing inside either one that can settle it. The City Record
+    # can: it publishes the effective date of every appointment and departure.
+    # Where it speaks, it decides. Where it is silent — and it is silent often,
+    # because it runs months behind — the fallback is the governance name, and
+    # the site says openly that this was not adjudicated.
     #
-    # There is deliberately no cleverness beyond that. An earlier version
-    # treated a Green Book "Acting"/"Interim" title as proof the Green Book was
-    # the newer source, but that does not hold: an acting official can be a
-    # holdover from the previous administration whom the governance file has
-    # ALREADY replaced with a permanent appointee. The flag says nothing
-    # reliable about which file moved last, so it is not used. Governance wins
-    # every disagreement; both names are always kept.
-    applied = 0
+    # Two heuristics were tried and abandoned before this. Treating a Green Book
+    # "Acting"/"Interim" title as proof of freshness was wrong (an acting
+    # official can be a holdover the governance file has already replaced), and
+    # so was assuming governance is always newer — the City Record shows City
+    # Planning going the other way. Evidence replaced both.
+    cr_index = city_record.index(cr_rows)
+    cr_agencies = city_record.agency_matcher(list(agencies), cr_rows)
+
+    def adjudicate(h):
+        """Which name the record supports, and why."""
+        gbn = h["gb"]["n"] if h["gb"] else ""
+        govn = h["gov"]["n"] if h["gov"] else ""
+        g = city_record.lookup(gbn, h["agency"], cr_index, cr_agencies) if gbn else None
+        v = city_record.lookup(govn, h["agency"], cr_index, cr_agencies) if govn else None
+        g_in = bool(g and g["reason"] in city_record.ARRIVALS)
+        v_in = bool(v and v["reason"] in city_record.ARRIVALS)
+        g_out = bool(g and g["reason"] in city_record.DEPARTURES)
+        v_out = bool(v and v["reason"] in city_record.DEPARTURES)
+
+        if g_in and not v_in:
+            return "greenbook", (f"City Record: {gbn} appointed to this agency "
+                                 f"{g['effective']}."), g
+        if v_in and not g_in:
+            return "governance", (f"City Record: {govn} appointed to this agency "
+                                  f"{v['effective']}."), v
+        if g_out and not v_out:
+            return "governance", (f"City Record: {gbn} left this agency "
+                                  f"{g['effective']}."), v
+        if v_out and not g_out:
+            return "greenbook", (f"City Record: {govn} left this agency "
+                                 f"{v['effective']}."), g
+        if g_in and v_in:  # both appointed here — the later one holds it now
+            later = max((g, v), key=lambda a: city_record._datekey(a["effective"]))
+            who = "greenbook" if later is g else "governance"
+            return who, (f"City Record: both appear; the later appointment is "
+                         f"{later['effective']}."), later
+        return None, "", None
+
+    applied = adjudicated = 0
     for h in heads:
         if h["status"] != "differs":
             continue
-        for p in people:
-            if p["a"] == h["agency"] and p["n"] == h["gb"]["n"] \
-                    and p["t"] == h["gb"]["t"]:
-                p["alt"] = {"n": p["n"], "src": "Green Book"}
-                p["n"] = h["gov"]["n"]
-                p["src"] = "governance"
-                applied += 1
-                break
+        verdict, why, action = adjudicate(h)
+        h["use"] = verdict or "governance"
+        h["adjudicated"] = bool(verdict)
+        h["why"] = why or (
+            "The City Record has not yet published a personnel action for "
+            "either name at this agency, so the governance name is shown as "
+            "the likelier of the two. This one is not settled.")
+        if action:
+            h["record"] = {"reason": action["reason"].title(),
+                           "effective": action["effective"],
+                           "salary": action["salary"]}
+        if verdict:
+            adjudicated += 1
 
-    log(f"  applied {applied} governance names over the Green Book "
-        f"across {sum(1 for h in heads if h['status']=='differs')} conflicts")
+        if h["use"] == "governance":
+            for p in people:
+                if p["a"] == h["agency"] and p["n"] == h["gb"]["n"] \
+                        and p["t"] == h["gb"]["t"]:
+                    p["alt"] = {"n": p["n"], "src": "Green Book"}
+                    p["n"] = h["gov"]["n"]
+                    p["src"] = "governance"
+                    p["settled"] = h["adjudicated"]
+                    applied += 1
+                    break
+        else:
+            # The Green Book name stands; record what the other file claims.
+            for p in people:
+                if p["a"] == h["agency"] and p["n"] == h["gb"]["n"] \
+                        and p["t"] == h["gb"]["t"]:
+                    p["alt"] = {"n": h["gov"]["n"], "src": "governance dataset"}
+                    p["src"] = ""
+                    p["settled"] = h["adjudicated"]
+                    break
+
+    n_diff = sum(1 for h in heads if h["status"] == "differs")
+    log(f"  conflicts: {n_diff}; settled by the City Record: {adjudicated}; "
+        f"governance name used {applied} times")
+
+    # ---- what the City Record adds beyond breaking ties -------------------
+    # Neither directory says when anyone started, what they are paid, or
+    # whether they are still there. The City Record says all three, so every
+    # official it can be matched to gets a start date and salary, and anyone
+    # whose last published action was a departure is flagged — a directory
+    # listing a person who has already resigned is the failure a phone
+    # directory most needs to catch.
+    dated = departed = 0
+    for p in people:
+        if not p["n"] or p["v"]:
+            continue
+        a = city_record.lookup(p["n"], p["a"], cr_index, cr_agencies)
+        if not a:
+            continue
+        p["cr"] = {"reason": a["reason"].title(), "effective": a["effective"],
+                   "salary": a["salary"] or 0}
+        if a["reason"] in city_record.ARRIVALS:
+            dated += 1
+        elif a["reason"] in city_record.DEPARTURES:
+            p["gone"] = 1
+            moved = city_record.onward_move(a, cr_index)
+            if moved:
+                p["cr"]["moved_to"] = moved
+            departed += 1
+
+    log(f"  City Record matched {dated} officials to an appointment "
+        f"and flagged {departed} who have since left")
 
     heads.sort(key=lambda h: (h["status"] != "differs", -h["n"]))
     conflicts = [h for h in heads if h["status"] == "differs"]
@@ -771,7 +870,12 @@ def main():
     built = datetime.now(timezone.utc).isoformat(timespec="seconds")
     payload = {
         "built": built,
-        "sources": {"greenbook": gb_meta, "agencies": org_meta},
+        "sources": {"greenbook": gb_meta, "agencies": org_meta,
+                    "city_record": {"id": city_record.DATASET,
+                                    "name": "City Record — Changes in Personnel",
+                                    "rows": len(cr_rows),
+                                    "through": cr_through,
+                                    "personnel_through": cr_published}},
         "stats": {
             "people": len(people),
             "named": sum(1 for p in people if p["n"]),
@@ -783,6 +887,10 @@ def main():
             "linked": len(links),
             "press_agencies": press_hits,
             "press_emails": sum(len(v) for v in press.values()),
+            "settled": adjudicated,
+            "conflicts": n_diff,
+            "dated": dated,
+            "departed": departed,
         },
         "people": people,
         "agencies": agency_list,
@@ -809,6 +917,13 @@ def main():
     # then stands out as the only kind of commit this repo makes.
     def signature(obj):
         content = {k: v for k, v in obj.items() if k not in ("built", "sources")}
+        # Source *values* are excluded (they restamp constantly) but their
+        # shape is not: adding a new source, or a new field to one, has to
+        # force a rewrite or the payload would never pick it up.
+        content["_schema"] = sorted(
+            f"{k}.{f}" for k, v in (obj.get("sources") or {}).items()
+            for f in (v if isinstance(v, dict) else {})
+        )
         blob = json.dumps(content, separators=(",", ":"), sort_keys=True)
         return hashlib.sha256(blob.encode()).hexdigest()
 

@@ -27,12 +27,15 @@ This is the same public data, reorganized:
 - **Every press office emails.** The city publishes these; neither open dataset
   does.
 - **Built for a phone.** Big tap targets, a swipe-away detail sheet, dark mode.
-- **Who runs what** — the two datasets that name agency heads disagree about 16
-  of them. The directory shows the governance dataset's name in every case, since
-  that file is maintained continuously, and marks the Green Book's as superseded.
-  It's a best guess, not a verdict — neither file is guaranteed current during a
-  transition. Both names are kept and both stay searchable: search `Cumbo` and
-  you land on the Cultural Affairs post with Diya Vij in it.
+- **Who runs what** — the two directories disagree about 15 agency heads, and
+  neither carries a date. The City Record does, so where it has published an
+  appointment it settles the question. It cuts both ways: it confirms governance
+  at Cultural Affairs and overrules it at City Planning. Unsettled conflicts say
+  so. Both names are kept and both stay searchable — search `Cumbo` and you land
+  on the Cultural Affairs post with Diya Vij in it.
+- **Already gone** — 42 people the Green Book still lists have left the job it
+  lists them in, found by matching the directory against the City Record. 14 of
+  them moved to another agency rather than leaving, and the site says where.
 - **Vacancies** — 128 posts the city lists with nobody in them, grouped by
   agency.
 - **Addresses** — 2,609 listings sit at 200 addresses. Tap one to see every
@@ -54,6 +57,8 @@ Three, all official, all re-fetched on every build:
   Technology and Innovation
 - **[Agency press contacts](https://www.nyc.gov/main/agency-press-contacts)**,
   NYC.gov
+- **City Record — Changes in Personnel** (`dg92-zbpx`), the city's legally
+  required record of every appointment and departure, with effective dates
 
 No email address here was ever inferred from a name pattern. Every one was read
 off a page the city published. See [METHODOLOGY.md](METHODOLOGY.md) for how the

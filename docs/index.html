@@ -127,6 +127,24 @@ main{max-width:1180px;margin:0 auto;padding:0 0 96px}
 .supersede{
   font-size:12.5px;color:var(--ink-3);margin-top:3px;line-height:1.35;
 }
+.gone{
+  display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--flag);background:var(--flag-bg);
+  padding:1.5px 5px;border-radius:2px;margin-left:5px;vertical-align:2px;
+}
+.crline{font-size:12.5px;color:var(--ink-3);margin-top:3px;line-height:1.35}
+.crline b{color:var(--ink-2);font-weight:600}
+.settled{
+  display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ok);background:rgba(27,94,63,.11);
+  padding:1.5px 5px;border-radius:2px;
+}
+@media (prefers-color-scheme:dark){.settled{background:rgba(111,196,149,.14)}}
+.unsettled{
+  display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-3);background:var(--paper-2);
+  padding:1.5px 5px;border-radius:2px;
+}
 .supersede s{text-decoration-thickness:1px;opacity:.8}
 .note{
   border-left:2.5px solid var(--green-3);background:var(--paper-2);
@@ -303,6 +321,7 @@ footer a{color:var(--green-2);text-decoration:none;font-weight:600}
   <button role="tab" data-tab="agencies" aria-selected="false">Agencies <span class="n" id="n-ag"></span></button>
   <button role="tab" data-tab="heads" aria-selected="false">Who runs what</button>
   <button role="tab" data-tab="press" aria-selected="false">Press offices <span class="n" id="n-pr"></span></button>
+  <button role="tab" data-tab="departed" aria-selected="false">Already gone <span class="n" id="n-dp"></span></button>
   <button role="tab" data-tab="vacant" aria-selected="false">Vacancies <span class="n" id="n-vc"></span></button>
   <button role="tab" data-tab="addresses" aria-selected="false">Addresses <span class="n" id="n-ad"></span></button>
   <button role="tab" data-tab="about" aria-selected="false">About</button>
@@ -313,6 +332,7 @@ footer a{color:var(--green-2);text-decoration:none;font-weight:600}
   <section class="pane" id="pane-agencies"></section>
   <section class="pane" id="pane-heads"></section>
   <section class="pane" id="pane-press"></section>
+  <section class="pane" id="pane-departed"></section>
   <section class="pane" id="pane-vacant"></section>
   <section class="pane" id="pane-addresses"></section>
   <section class="pane" id="pane-about"></section>
@@ -358,6 +378,7 @@ function boot(){
   $('#n-ag').textContent = D.agencies.length;
   $('#n-pr').textContent = D.press.length;
   $('#n-vc').textContent = D.stats.vacant;
+  $('#n-dp').textContent = D.stats.departed;
   $('#n-ad').textContent = D.buildings.length;
   const dt = new Date(D.sources.greenbook.updated);
   $('#masthead-sub').textContent = 'Updated ' + dt.toLocaleDateString('en-US',
@@ -485,7 +506,7 @@ function renderIntro(){
       <div class="stat"><div class="v">${s.agencies}</div><div class="l">Agencies</div></div>
       <div class="stat"><div class="v">${s.press_emails}</div><div class="l">Press emails</div></div>
       <div class="stat"><div class="v">${s.vacant}</div><div class="l">Vacant posts</div></div>
-      <div class="stat"><div class="v">${s.buildings}</div><div class="l">Addresses</div></div>
+      <div class="stat"><div class="v">${s.departed}</div><div class="l">Already gone</div></div>
     </div>
     <p style="font-size:13px;margin-top:14px">Green Book updated ${gb}.
     <a href="#" data-tab-link="about" style="color:var(--green-2);font-weight:600;text-decoration:none">How this was built &rarr;</a></p>
@@ -499,11 +520,14 @@ function rowHTML(r, q){
     if(p.tel) acts.push(actLink('tel:'+p.tel, ICON.phone, p.p, 'solid'));
     else if(p.dtel) acts.push(actLink('tel:'+p.dtel, ICON.phone, p.dp, ''));
     return `<button class="row" data-id="${esc(r.id)}">
-      <span class="kind">${p.v?'Vacant':'Official'}</span>
-      <div class="nm">${p.n ? mark(p.n,q) : '<span style="color:var(--ink-3)">Vacant post</span>'}</div>
+      <span class="kind">${p.v?'Vacant':p.gone?'Left':'Official'}</span>
+      <div class="nm">${p.n ? mark(p.n,q) : '<span style="color:var(--ink-3)">Vacant post</span>'}${p.gone?'<span class="gone">No longer here</span>':''}</div>
       <div class="ti">${mark(p.t,q)}</div>
       <div class="ag">${mark(p.a,q)}</div>
-      ${p.alt? `<div class="supersede">Green Book still lists <s>${mark(p.alt.n,q)}</s></div>`:''}
+      ${p.alt? `<div class="supersede">${p.src? 'Green Book still lists':'Governance dataset still lists'} <s>${mark(p.alt.n,q)}</s></div>`:''}
+      ${p.gone? `<div class="crline">${p.cr.moved_to
+          ? `Moved to <b>${esc(p.cr.moved_to)}</b> on ${esc(p.cr.effective)}`
+          : `<b>${esc(p.cr.reason)}</b> from this agency ${esc(p.cr.effective)}`} &middot; City Record</div>`:''}
       ${p.d.length? `<div class="meta">${esc(p.d.join(' › '))}</div>`:''}
       ${acts.length? `<div class="acts">${acts.join('')}</div>`:''}
     </button>`;
@@ -602,8 +626,14 @@ function personSheet(p){
       `<a href="mailto:${esc(c.e)}">${esc(c.e)}</a>` +
       (c.n? ` <span style="color:var(--ink-3)">&mdash; ${esc(c.n)}</span>`:'')).join('<br>')));
   if(a.website) rows.push(dl('Website', `<a href="${esc(a.website)}" target="_blank" rel="noopener">${esc(a.website.replace(/^https?:\/\//,''))}</a>`));
+  if(p.cr && !p.gone && p.cr.effective)
+    rows.push(dl('In post since', esc(p.cr.effective)
+      + ' <span style="color:var(--ink-3)">· City Record</span>'));
+  if(p.cr && p.cr.salary)
+    rows.push(dl('Salary', '<span class="mono">$' + p.cr.salary.toLocaleString()
+      + '</span> <span style="color:var(--ink-3)">· at that action</span>'));
   rows.push(dl('Name from', p.alt
-    ? 'Governance dataset (t3jq-9nkf)'
+    ? (p.src? 'Governance dataset (t3jq-9nkf)' : 'Green Book (mdcw-n682)')
     : 'Green Book (mdcw-n682)'));
   rows.push(dl('Source', `Green Book, updated ${new Date(D.sources.greenbook.updated).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`));
 
@@ -612,10 +642,26 @@ function personSheet(p){
   // person, so it may still be the predecessor's line.
   const note = p.alt
     ? `<div class="note"><b>Two city files disagree about this post.</b>
-        The name above is from the governance dataset, which is maintained
-        continuously. The Green Book still lists <b>${esc(p.alt.n)}</b>.
-        Neither is guaranteed current during a transition, and the direct line
-        is the desk's &mdash; it may not have moved with the job.</div>`
+        ${p.settled
+          ? `The City Record settles it: the name above is the one its published
+             personnel actions support. The other file still lists
+             <b>${esc(p.alt.n)}</b>.`
+          : `The name above is from the ${p.src? 'governance dataset':'Green Book'},
+             the likelier of the two. The other still lists <b>${esc(p.alt.n)}</b>.
+             The City Record has published nothing for either name here, so this
+             one is not settled.`}
+        The direct line is the desk's &mdash; it may not have moved with the job.</div>`
+    : '';
+
+  // What the City Record says about this person, which is the only place a
+  // start date or a departure comes from.
+  const crnote = p.gone
+    ? `<div class="note" style="border-left-color:var(--flag)">
+        <b>The City Record says this person is no longer at this agency.</b>
+        ${p.cr.moved_to
+          ? `They moved to <b>${esc(p.cr.moved_to)}</b> on ${esc(p.cr.effective)}.`
+          : `Recorded as ${esc(p.cr.reason.toLowerCase())} on ${esc(p.cr.effective)}.`}
+        The Green Book still lists them here.</div>`
     : '';
 
   return `
@@ -623,6 +669,7 @@ function personSheet(p){
     <div class="d-title">${esc(p.t)}</div>
     <button class="d-agency" data-goto="a${esc(p.a)}" style="text-align:left">${esc(p.a)} &rarr;</button>
     ${p.d.length? `<div class="d-path">${p.d.map((x,i)=> (i? ' › ':'') + '<b>'+esc(x)+'</b>').join('')}</div>`:''}
+    ${crnote}
     ${note}
     ${acts.length? `<div class="bigacts">${acts.join('')}</div>`:''}
     <dl class="dl">${rows.join('')}</dl>`;
@@ -787,25 +834,32 @@ function renderHeads(){
             h.status==='governance_only'?'Governance data only':'Neither names a head'}</span>
       </div>
       <div class="hgrid">
-        ${box('Green Book', h.gb, false)}
-        ${box('Governance dataset', h.gov, h.status === 'differs')}
+        ${box('Green Book', h.gb, h.status === 'differs' && h.use === 'greenbook')}
+        ${box('Governance dataset', h.gov, h.status === 'differs' && h.use === 'governance')}
       </div>
-      ${h.status === 'differs'? `<div style="font-size:12.5px;color:var(--ink-3);margin-top:7px;line-height:1.45">Shown as the governance name; the Green Book's is marked superseded. Neither is guaranteed current &mdash; check before relying on it.</div>`:''}
+      ${h.status === 'differs'? `
+        <div style="margin-top:8px">
+          <span class="${h.adjudicated?'settled':'unsettled'}">${h.adjudicated?'Settled by the City Record':'Not settled'}</span>
+        </div>
+        <div style="font-size:12.5px;color:var(--ink-3);margin-top:6px;line-height:1.45">${esc(h.why||'')}</div>`:''}
       ${h.gb && h.gb.p ? `<div class="acts">${actLink('tel:'+h.gb.tel, ICON.phone, h.gb.p, '')}</div>`:''}
     </div>`;
   $('#pane-heads').innerHTML = `
     <div class="intro" style="padding-bottom:2px">
       <p class="lede">Two official sources name the people who run New York's agencies.
       For ${differs.length} of them, they name different people.</p>
-      <p>The Green Book is the city's directory of record. The Office of Technology
-      and Innovation keeps a separate inventory of governance organizations that also
-      names a principal officer, and maintains it continuously &mdash; so where the two
-      disagree, this directory shows the governance name and marks the Green Book's as
-      superseded.</p>
-      <p>That is a best guess, not a verdict. Neither file is guaranteed current
-      during a transition, and knowing which one is right for a given post means
-      checking. Both names are always kept and both stay searchable &mdash; nothing
-      is discarded, and you can see exactly what each file says.</p>
+      <p>Neither directory carries a date, so nothing inside either one can break
+      the tie. A third source can: the City Record publishes the effective date of
+      every appointment and departure in city government. Where it has published
+      something, it decides &mdash; and it settles
+      ${H.filter(h => h.adjudicated).length} of these ${differs.length}.</p>
+      <p>It cuts both ways. It confirms the governance dataset at Cultural Affairs,
+      and overrules it at City Planning, where the Green Book had it right all along.
+      Where the City Record is silent &mdash; it runs a couple of months behind &mdash;
+      the governance name is shown as the likelier of the two and the card says
+      plainly that the question is open.</p>
+      <p>Both names are always kept and both stay searchable. Nothing is discarded,
+      and you can see exactly what each file says.</p>
     </div>
     <div class="sec">Sources disagree <span class="mono" style="font-size:10px">${differs.length}</span></div>
     ${differs.map(card).join('')}
@@ -835,6 +889,39 @@ function renderPress(){
             ${c.tel? actLink('tel:'+c.tel, ICON.phone, c.p, ''):''}
           </div>
         </button>`).join('')}</div>`).join('')}`;
+}
+
+function renderDeparted(){
+  const g = D.people.filter(p => p.gone);
+  const dk = s => { const [m,d,y] = (s||'').split('/'); return (y||'')+(m||'')+(d||''); };
+  g.sort((a,b) => dk(b.cr.effective).localeCompare(dk(a.cr.effective)));
+  const moved = g.filter(p => p.cr.moved_to).length;
+  $('#pane-departed').innerHTML = `
+    <div class="intro" style="padding-bottom:2px">
+      <p class="lede">${g.length} people the Green Book still lists have already
+      left the job it lists them in.</p>
+      <p>The two directories describe a present with no history, so neither can
+      tell you that someone has gone. The City Record can &mdash; the city is
+      required to publish every appointment, resignation, retirement and dismissal,
+      with an effective date. Matching those against the directory finds the
+      listings that have quietly gone stale.</p>
+      <p>${moved} of them did not leave government at all; they moved to another
+      agency and the old desk is still in their name. A departure here means
+      <b>no longer at this agency</b>, nothing more.</p>
+      <p style="font-size:13px">Every one of these required the name, the middle
+      initial and the agency to agree before it would be shown. Personnel notices
+      run about two months behind, so this is a floor, not a full count.</p>
+    </div>
+    <div class="rows">${g.map(p => `
+      <button class="row" data-id="p${p.i}">
+        <span class="kind">${esc(p.cr.reason)}</span>
+        <div class="nm">${esc(p.n)}</div>
+        <div class="ti">${esc(p.t)}</div>
+        <div class="ag">${esc(p.a)}</div>
+        <div class="crline">${p.cr.moved_to
+          ? `Moved to <b>${esc(p.cr.moved_to)}</b> on ${esc(p.cr.effective)}`
+          : `<b>${esc(p.cr.reason)}</b> ${esc(p.cr.effective)}`}</div>
+      </button>`).join('')}</div>`;
 }
 
 function renderVacant(){
@@ -900,6 +987,14 @@ function renderAbout(){
       ${s.press_emails} named press officers across ${D.press.length} offices.
       Neither open dataset contains an email address; this page is the city's
       published source for them.</p>
+      <p><b>City Record &mdash; Changes in Personnel</b>
+      (<span class="mono">${esc(src.city_record.id)}</span>) &mdash;
+      ${src.city_record.rows.toLocaleString()} published personnel actions, through
+      ${esc(src.city_record.through)}. Every appointment, resignation, retirement and
+      dismissal the city is required to publish, with an effective date. This is the
+      only source here with a sense of time, which is what lets the site date an
+      appointment, show a salary, and notice when someone in the directory has
+      already left.</p>
 
       <div class="sec">What was done to it</div>
       <p>The directory follows Open Data rather than a calendar: a check runs
@@ -923,18 +1018,19 @@ function renderAbout(){
       &ldquo;Alister Martin&rdquo; are one person; nicknames like Sam for Samuel
       are tolerated. A title only counts as an agency head if it is the whole
       title &mdash; Chief of Staff and Deputy Commissioner never qualify.</p>
-      <p><b>Where they disagree, this directory shows the governance name</b> and
-      marks the Green Book's as superseded. That file is maintained continuously
-      and is the better source on who currently holds a post; the Green Book lags
-      on political appointees. All ${D.people.filter(p=>p.alt).length} conflicts
-      are resolved this way.</p>
-      <p>It is a best guess, not a verdict, and it is applied without exception.
-      An earlier version treated a Green Book &ldquo;acting&rdquo; or
-      &ldquo;interim&rdquo; title as proof the Green Book was the newer source &mdash;
-      but that does not hold. An acting official can be a holdover from the
-      previous administration whom the governance file has already replaced with
-      a permanent appointee. The flag says nothing reliable about which file
-      moved last, so it is not used.</p>
+      <p><b>A third source breaks the tie.</b> Neither directory carries a date,
+      so nothing inside either can settle a disagreement. The City Record
+      publishes the effective date of every appointment and departure in city
+      government, and where it has published something it decides &mdash;
+      ${D.stats.settled} of the ${D.stats.conflicts} conflicts. Where it is silent,
+      the governance name is shown as the likelier of the two and the site says
+      the question is open.</p>
+      <p>This replaced two guesses that were both wrong. Treating a Green Book
+      &ldquo;acting&rdquo; title as proof of freshness fails because an acting
+      official can be a holdover the governance file has already replaced. And
+      assuming governance is always newer fails too: at City Planning the record
+      shows Sideya Sherman appointed in March 2026, so the Green Book had it right
+      and the governance file was stale.</p>
       <p>Nothing is discarded. Both names are kept on the record, both remain
       searchable, and every affected listing says which file its name came from
       and what the other file says. Two caveats worth stating: neither file is
@@ -990,7 +1086,8 @@ function showTab(name){
     p.classList.toggle('on', p.id === 'pane-'+name));
   if(!RENDERED[name]){
     ({agencies:renderAgencies, heads:renderHeads, press:renderPress,
-      vacant:renderVacant, addresses:renderAddresses, about:renderAbout}[name]||function(){})();
+      departed:renderDeparted, vacant:renderVacant, addresses:renderAddresses,
+      about:renderAbout}[name]||function(){})();
     RENDERED[name] = true;
   }
   if(location.hash.slice(2) !== name) history.replaceState(null,'','#/'+name);
@@ -998,7 +1095,7 @@ function showTab(name){
 }
 function route(){
   const h = location.hash.slice(2);
-  showTab(['agencies','heads','press','vacant','addresses','about'].includes(h) ? h : 'find');
+  showTab(['agencies','heads','press','departed','vacant','addresses','about'].includes(h) ? h : 'find');
 }
 
 // ---------------------------------------------------------------- events
