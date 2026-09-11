@@ -34,6 +34,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import city_record  # noqa: E402
@@ -54,6 +56,11 @@ MIN_AGENCY_ROWS = 200
 UA = "nyc-green-book/1.0 (+https://github.com/joshgreenman1973/nyc-green-book)"
 SESSION = requests.Session()
 SESSION.headers.update({"User-Agent": UA})
+# NYC Open Data throws the odd 500/503 on a query that succeeds a minute later.
+# Retry those with backoff; a source that stays down still fails the build.
+SESSION.mount("https://", HTTPAdapter(max_retries=Retry(
+    total=4, backoff_factor=10, status_forcelist=(500, 502, 503, 504),
+    allowed_methods=("GET",), raise_on_status=False)))
 
 
 def log(msg):
