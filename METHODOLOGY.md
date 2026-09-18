@@ -282,15 +282,16 @@ Writes `docs/data/greenbook.json` and `docs/data/greenbook.csv`.
 
 ### Refresh cadence
 
-The directory follows Open Data rather than a calendar. `scripts/check_freshness.py`
-reads each dataset's own `rowsUpdatedAt` — two metadata requests, no row data —
-and compares it to the stamps recorded in the last build. A GitHub Action runs
-that check **every four hours** and rebuilds only when the city has actually
-published something. This matters: the Green Book moved twice in the week this
-was built, so a weekly schedule would have served stale data for days.
+A GitHub Action rebuilds the directory **every Monday morning**. Agency heads and
+divisions change on the scale of weeks, so a weekly refresh is current enough,
+and the NYC.gov press-contacts page carries no update stamp, so the only way to
+catch a change there is to look on a schedule. Until September 2026 the Action
+also checked the city's datasets every four hours; that was more than the
+directory needs.
 
-A **Monday run is forced** regardless, because the NYC.gov press-contacts page
-carries no update stamp and the only way to catch a change there is to look.
+For a manual run, `scripts/check_freshness.py` reads each dataset's own
+`rowsUpdatedAt` — two metadata requests, no row data — compares it to the stamps
+recorded in the last build, and skips the rebuild if nothing has changed.
 
 The check fails open: if it cannot reach Socrata it exits 2 and the rebuild runs
 anyway, on the principle that a redundant build is cheaper than a missed one.

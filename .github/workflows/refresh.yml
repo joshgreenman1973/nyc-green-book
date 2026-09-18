@@ -1,22 +1,20 @@
 name: Refresh directory
 
-# Follows NYC Open Data rather than a calendar.
+# Rebuilds once a week, Monday morning. Agency heads and divisions change on the
+# scale of weeks, so a weekly refresh is current enough, and the Monday run has
+# to rebuild anyway because the NYC.gov press-contacts page carries no update
+# stamp. It used to check every four hours; that was dropped in September 2026 as
+# more than the directory needs.
 #
-# Every four hours a cheap check reads each dataset's own `rowsUpdatedAt` — two
-# metadata requests, no row data — and the full rebuild runs only when the city
-# has actually published something. The Green Book moved twice in the week this
-# was built, so a weekly schedule would have shown stale data for days.
-#
-# The Monday run is forced regardless: the NYC.gov press-contacts page carries
-# no update stamp, so the only way to catch a change there is to look.
+# A manual run (workflow_dispatch) can still use scripts/check_freshness.py to
+# skip the rebuild when nothing has changed; tick "force" to rebuild regardless.
 #
 # The build fails loud on a short read, so a failed run is a real failure worth
 # an email, not noise to suppress.
 
 on:
   schedule:
-    - cron: '20 */4 * * *'   # every 4 hours, offset off the hour
-    - cron: '0 11 * * 1'     # Mondays ~07:00 ET, forced
+    - cron: '0 11 * * 1'     # Mondays ~07:00 ET
   workflow_dispatch:
     inputs:
       force:
@@ -46,11 +44,10 @@ jobs:
 
       - name: Has the city published anything new?
         id: check
-        # The weekly cron and a manual force skip the check entirely.
+        # The weekly run and a forced manual run skip the check entirely.
         run: |
-          if [ "${{ github.event.schedule }}" = "0 11 * * 1" ] || \
-             [ "${{ inputs.force }}" = "true" ] || \
-             [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "schedule" ] || \
+             [ "${{ inputs.force }}" = "true" ]; then
             echo "Forced run."
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else

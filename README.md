@@ -81,11 +81,11 @@ python3 scripts/build.py           # rewrites docs/data/
 The build fails loudly on a short read rather than quietly shipping a thinner
 directory.
 
-**Refresh follows Open Data, not a calendar.** A GitHub Action checks each
-dataset's own `rowsUpdatedAt` every four hours and rebuilds only when the city
-has published something — the Green Book moved twice in the week this was built,
-so weekly would have meant days of stale data. Mondays run regardless, because
-the NYC.gov press page carries no update stamp.
+**Refresh is weekly.** A GitHub Action rebuilds the directory every Monday
+morning. Agency heads and divisions change on the scale of weeks, and the NYC.gov
+press page carries no update stamp, so it has to be re-read on a schedule anyway.
+A manual run can check each dataset's own `rowsUpdatedAt` first and skip the
+rebuild if nothing has changed.
 
 ```bash
 python3 scripts/check_freshness.py   # exit 0 = rebuild, 1 = nothing new
