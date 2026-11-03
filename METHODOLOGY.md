@@ -7,7 +7,7 @@ that makes it greener is a fourth source — the City Record's
 published personnel actions — which dates every appointment and departure and so
 catches the official directory when it goes stale.
 
-Everything below is reproducible: `python3 scripts/build.py` fetches all three
+Everything below is reproducible: `python3 scripts/build.py` fetches all four
 sources live and rewrites `docs/data/`. Nothing is hand-edited, and no data file
 is committed that the script cannot regenerate.
 
@@ -32,8 +32,8 @@ York City government, the city's own directory cannot help you.
 
 ## What the build does
 
-**Fetches live, fails loud.** Every run re-fetches all three sources. A response
-shorter than a floor (2,000 Greenbook rows, 200 organizations, 1 press contact)
+**Fetches live, fails loud.** Every run re-fetches all four sources. A response
+shorter than a floor (2,000 Greenbook rows, 200 organizations, 1 press contact, 20,000 City Record personnel rows)
 raises and aborts rather than overwriting good data with a short read. A silent
 partial fetch would leave the directory incomplete without warning, so it is
 treated as fatal.
