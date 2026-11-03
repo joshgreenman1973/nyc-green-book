@@ -498,8 +498,8 @@ function renderIntro(){
     <p class="lede">The city's own directory, rebuilt and kept fresher. Every official
     the City of New York publishes, searchable in one box, with every phone number one
     tap from a call.</p>
-    <p>Start typing a name, a job title or an agency. Nothing here is guessed at
-    &mdash; it is the city's published record, reorganized. If a city number
+    <p>Start typing a name, a job title or an agency. Everything here is the city's
+    published record, reorganized. If a city number
     called you and you want to know who it was, paste that in too.</p>
     <div class="stats">
       <div class="stat"><div class="v">${s.people.toLocaleString()}</div><div class="l">Listings</div></div>
@@ -851,7 +851,7 @@ function renderHeads(){
       <p class="lede">Two official sources name the people who run New York's agencies.
       For ${differs.length} of them, they name different people.</p>
       <p>Neither directory carries a date, so nothing inside either one can break
-      the tie. A third source can: the City Record publishes the effective date of
+      the tie. A third source, the City Record, publishes the effective date of
       every appointment and departure in city government. Where it has published
       something, it decides &mdash; and it settles
       ${H.filter(h => h.adjudicated).length} of these ${differs.length}.</p>
@@ -859,7 +859,7 @@ function renderHeads(){
       and overrules it at City Planning, where the Green Book had it right all along.
       Where the City Record is silent &mdash; it runs a couple of months behind &mdash;
       the governance name is shown as the likelier of the two and the card says
-      plainly that the question is open.</p>
+      that the question is open.</p>
       <p>Both names are always kept and both stay searchable. Nothing is discarded,
       and you can see exactly what each file says.</p>
     </div>
@@ -902,8 +902,8 @@ function renderDeparted(){
     <div class="intro" style="padding-bottom:2px">
       <p class="lede">${g.length} people the Green Book still lists have already
       left the job it lists them in.</p>
-      <p>The two directories describe a present with no history, so neither can
-      tell you that someone has gone. The City Record can &mdash; the city is
+      <p>Neither directory carries dates, so neither can
+      tell you that someone has gone. The City Record can: the city is
       required to publish every appointment, resignation, retirement and dismissal,
       with an effective date. Matching those against the directory finds the
       listings that have quietly gone stale.</p>
@@ -935,8 +935,8 @@ function renderVacant(){
     <div class="intro" style="padding-bottom:2px">
       <p class="lede">${v.length} posts in the Green Book are listed with no one in them.</p>
       <p>The city keeps the desk, the title and often the phone line in its directory
-      and marks the occupant vacant. Read together, they are a map of where
-      New York's government is currently short-handed.</p>
+      and marks the occupant vacant. Read together, they show where
+      New York's government has posts no one fills.</p>
     </div>
     ${ags.map(a => `
       <div class="sec">${esc(a)} <span class="mono" style="font-size:10px">${byAg[a].length}</span></div>
@@ -969,11 +969,11 @@ function renderAbout(){
   $('#pane-about').innerHTML = `
     <div class="intro">
       <p class="lede">This is the City of New York's own directory, rebuilt as
-      something you can actually search.</p>
+      something you can search.</p>
       <p>The official Green Book Online makes you choose a category, then a
       subcategory, then wait for a page to reload. It has no export, no way to
-      call a number from a phone, and no way to link to anything. The data
-      underneath it is good. The way you reach it is not.</p>
+      call a number from a phone and no way to link to anything. The data
+      underneath it is good.</p>
       <p><b>Hence the name.</b> This is not the Green Book &mdash; that is the
       city's, and it is linked at the bottom of this page. This is the same public
       record with a fourth source layered on top: the City Record's published
@@ -1039,7 +1039,7 @@ function renderAbout(){
       and the governance file was stale.</p>
       <p>Nothing is discarded. Both names are kept on the record, both remain
       searchable, and every affected listing says which file its name came from
-      and what the other file says. Two caveats worth stating: neither file is
+      and what the other file says. Two caveats: neither file is
       guaranteed current during a transition, and a direct phone number belongs
       to the desk, not the person, so on a post that has changed hands the line
       may still be the predecessor's.</p>
@@ -1053,7 +1053,7 @@ function renderAbout(){
       as a contact list</a> &mdash; the mayor, the deputy mayors, the chief of staff
       and every agency head under them, with direct lines where the city publishes
       them. Separately elected offices are left out on purpose. The email column is
-      blank, and that is the finding: the city publishes no email address for any of
+      blank because the city publishes no email address for any of
       these posts.</p>
 
       <div class="sec">Built</div>

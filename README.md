@@ -1,7 +1,7 @@
 # The Greener Book
 
-The City of New York's official directory, rebuilt as something you can actually
-search — and kept fresher than the original.
+The City of New York's official directory, rebuilt as something you can search,
+and kept fresher than the original.
 
 Not to be confused with the city's own Green Book, which is
 [here](https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Online). This is the same
@@ -21,7 +21,7 @@ press offices. One search box over all of it.
 the city's own directory and the data underneath it is good. Reaching it is the
 problem: you pick a category, then a subcategory, then wait for a page to
 reload. There is no export, no way to call a number from a phone, no way to link
-to a listing, and no way to search across everything at once.
+to a listing and no way to search across everything at once.
 
 This is the same public data, reorganized:
 
@@ -68,7 +68,7 @@ Three, all official, all re-fetched on every build:
 
 No email address here was ever inferred from a name pattern. Every one was read
 off a page the city published. See [METHODOLOGY.md](METHODOLOGY.md) for how the
-sources are joined, how agency heads are compared, and where this can be wrong.
+sources are joined, how agency heads are compared and where this can be wrong.
 
 ## Build
 

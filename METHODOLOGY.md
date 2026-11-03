@@ -1,9 +1,9 @@
 # Methodology — The Greener Book
 
-How this directory is assembled, what it claims, and where it can be wrong.
+How this directory is assembled, what it claims and where it can be wrong.
 
-The name is a joke with a point: this is not the city's Green Book but a rebuild
-of it, and the thing that makes it greener is a fourth source — the City Record's
+The name is a joke: this is a rebuild of the city's Green Book, and the thing
+that makes it greener is a fourth source — the City Record's
 published personnel actions — which dates every appointment and departure and so
 catches the official directory when it goes stale.
 
@@ -35,7 +35,7 @@ York City government, the city's own directory cannot help you.
 **Fetches live, fails loud.** Every run re-fetches all three sources. A response
 shorter than a floor (2,000 Greenbook rows, 200 organizations, 1 press contact)
 raises and aborts rather than overwriting good data with a short read. A silent
-partial fetch is the failure mode that quietly rots a directory, so it is
+partial fetch would leave the directory incomplete without warning, so it is
 treated as fatal.
 
 **Normalizes.** Names are assembled from the five columns the Greenbook splits
@@ -85,7 +85,7 @@ five letters is a credential. So `Alister F. Martin MD, MPP` and
 (`Sam`/`Samuel`), quoted nicknames dropped, and middle names ignored.
 
 **Outcomes.** Every agency lands in one of six states, of which only `differs`
-asserts a genuine disagreement:
+asserts that the sources disagree:
 
 | Status | Agencies | Meaning |
 |---|---|---|
@@ -120,8 +120,7 @@ all along.
 **Two earlier heuristics were tried and removed**, both wrong. Treating a Green
 Book `Acting`/`Interim` title as proof of freshness fails, because an acting
 official can be a holdover the governance file has already replaced. And assuming
-governance is always newer fails too — City Planning is the counter-example. The
-City Record replaced guessing with evidence.
+governance is always newer fails too — City Planning is the counter-example.
 
 **Where it is silent, the site says so.** A fallback is shown as a best guess and
 labelled unsettled, never as a verdict.
@@ -154,9 +153,8 @@ as a reason to check, never as a finding.
 The rule is absolute: **an address enters this directory only if it was read
 verbatim off a page the city published.** None is inferred from a name pattern,
 none comes from a broker or a social profile, and none is carried over from an
-older scrape. This is not a theoretical concern — a language model asked to
-summarize a contact page will cheerfully return a plausible, wrong address that
-follows the right pattern.
+older scrape. A language model asked to summarize a contact page will return a
+plausible, wrong address that follows the right pattern.
 
 In practice that means:
 
@@ -219,7 +217,9 @@ months behind, so silence is never evidence that someone is still in post.
 senior ranks of the executive branch under the mayor, 62 people.
 
 **Scope.** The Mayor's Office, mayoral agencies and mayoral offices, plus the
-public-benefit corporations the mayor appoints (EDC, HDC, H+H, NYCHA, SCA).
+public-benefit corporations the mayor appoints (the Economic Development Corporation, the Housing Development Corporation, NYC
+Health + Hospitals, the New York City Housing Authority and the School
+Construction Authority).
 Separately elected offices are excluded by design — the comptroller, the public
 advocate, the borough presidents, the district attorneys and the Council are not
 the administration. Scope is set from the governance dataset's
@@ -239,14 +239,13 @@ Duplicate listings are collapsed on name + title + agency, because the Green Boo
 lists some officials once per body they sit on. Vacant posts are dropped — they
 are not contacts.
 
-**The email column is empty, and that is the finding.** The City of New York
+**The email column is empty.** The City of New York
 publishes no email address for any of these 62 posts. Not in the Greenbook, not
 in the governance inventory, not on the agency pages, and not for the mayor. The
 82 addresses this project does carry are all press-office staff, and none of them
 is one of these 62 people — the overlap is zero. The column is kept so the file
 is ready to fill in from your own reporting. It is never populated by inferring
-an address from a name, which is the one thing that would make this file worse
-than useless.
+an address from a name, which would make this file worse than useless.
 
 40 of the 62 have a published direct phone. Tier 1 has none: the city publishes
 no direct line for the mayor or any deputy mayor.
@@ -266,9 +265,8 @@ no direct line for the mayor or any deputy mayor.
   on an agency, so is this.
 - **Vacancies are as listed.** 128 posts carry the literal name "Vacant". That
   is the city's assertion about its own staffing, reproduced, not verified.
-- **No emails for individuals, by design.** See above. This will look like a
-  gap. It is the city's gap, and filling it by guessing would be worse than
-  leaving it open.
+- **No emails for individuals, by design.** See above. The gap is the city's,
+  and filling it by guessing would be worse than leaving it open.
 
 ## Rebuilding
 
